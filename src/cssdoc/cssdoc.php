@@ -12,7 +12,7 @@ class cssdoc {
 	   'comment' => '\\/\\*[\d\D]*?\\*\\/',
 	   'quotes' => '(?<!\\\\)("(?:[^"\\\\]++|\\\\.)*+"|\'(?:[^\'\\\\]++|\\\\.)*+\')',
 	   'comparison' => '[\^*$<>]?=', // comparison operators for media queries or attribute selectors
-	   'join' => '[>+~*\\/-]',
+	   'join' => '[>+~*\/-]',
 	   'curlyopen' => '{',
 	   'curlyclose' => '}',
 	   'squareopen' => '\[',
@@ -23,7 +23,8 @@ class cssdoc {
 	   'colon' => ':',
 	   'semicolon' => ';',
 	   'directive' => '@[a-z-]++',
-	   'string' => '!?[^\[\]{}\(\):;,>+~\^$!" \n\r\t\/]++'
+	   'important' => '!important\b',
+	   'string' => '[^\[\]{}\(\):;,>+~\^$!" \n\r\t]++',
 	];
 
 	/**
@@ -37,27 +38,16 @@ class cssdoc {
 		'removequotes' => true,
 		'shortenhex' => true,
 		'email' => false,
-		'maxline' => false,
+		'maxline' => null,
 		'lowerproperties' => true,
 		'lowervalues' => true,
 		'output' => 'minify'
 	];
 
-	protected $output = [
-		'output' => 'minify',
-		'prefix' => ''
-	];
-
-	protected $document;
-
 	/**
-	 * Constructs the object
-	 *
-	 * @param array $config An array of configuration parameters that is recursively merged with the default config
+	 * @var document $document The root document
 	 */
-	public function __construct(array $config = []) {
-		$this->config = array_merge($this->config, $config);
-	}
+	protected $document;
 
 	/**
 	 * Calculates the length property
@@ -68,8 +58,8 @@ class cssdoc {
 	public function __get(string $var) {
 		if ($var == 'length') {
 			return count($this->children);
-		} elseif ($var == 'output') {
-			return $this->output;
+		} elseif ($var == 'config') {
+			return $this->config;
 		}
 		return null;
 	}
@@ -143,7 +133,7 @@ class cssdoc {
 		$this->children = [];
 
 		// tokenise the input HTML
-		if (($tokens = \hexydec\html\tokenise::tokenise($css, self::$tokens)) === false) {
+		if (($tokens = $this->tokenise($css, self::$tokens)) === false) {
 			$error = 'Could not tokenise input';
 
 		// parse the document
@@ -166,11 +156,47 @@ class cssdoc {
 	 */
 	protected function getCharsetFromCss(string $css) : ?string {
 		if (mb_strpos($css, '@charset') === 0 && ($end = mb_strpos($css, '";')) !== false) {
-			return mb_substr($css, 10, $end);
+			return mb_substr($css, 10, $end - 10);
 		} elseif (($charset = mb_detect_encoding($css)) !== false) {
 			return $charset;
 		}
 		return null;
+	}
+
+	/**
+	 * Tokenises the input using the supplied patterns
+	 *
+	 * @param string $input The string to be tokenised
+	 * @param array $tokens An associative array of regexp patterns, keyed by their token name
+	 * @return array An array of tokens, each token is an array containing the keys 'type' and 'value'
+	 */
+	protected function tokenise(string $input, array $tokens) {
+
+		// prepare regexp and extract strings
+		$patterns = [];
+		foreach ($tokens AS $key => $item) {
+			$patterns[] = '(?<'.$key.'>'.$item.')';
+		}
+		$re = '/\G'.implode('|', $patterns).'/u';
+
+		$output = Array();
+		$keys = array_keys($tokens);
+		$callback = function ($match) use ($keys, &$output) {
+
+			// go through tokens and find which one matched
+			foreach ($keys AS $key) {
+				if ($match[$key] !== '') {
+					$output[] = [
+						'type' => $key,
+						'value' => $match[$key]
+					];
+					break;
+				}
+			}
+			return '';
+		};
+		preg_replace_callback($re, $callback, $input);
+		return $output ? $output : false;
 	}
 
 	/**
@@ -208,7 +234,29 @@ class cssdoc {
 	 * @return void
 	 */
 	public function compile(array $options = []) : string {
-		$options = array_merge($this->output, $options);
+		$options = array_merge($this->config, ['prefix' => ''], $options);
 		return $this->document->compile($options);
+	}
+
+	/**
+	 * Compile the document as an HTML string and save it to the specified location
+	 *
+	 * @param array $options An array indicating output options, this is merged with htmldoc::$output
+	 * @return string The compiled HTML
+	 */
+	public function save(string $file = null, array $options = []) {
+		$css = $this->compile($options);
+
+		// send back as string
+		if (!$file) {
+			return $css;
+
+		// save file
+		} elseif (file_put_contents($file, $css) === false) {
+			trigger_error('File could not be written', E_USER_WARNING);
+		} else {
+			return true;
+		}
+		return false;
 	}
 }

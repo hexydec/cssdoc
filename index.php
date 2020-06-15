@@ -13,8 +13,8 @@ $mem = Array(
 );
 
 // create object and retrieve config
-$doc = new hexydec\html\htmldoc();
-$options = $doc->getConfig('minify');
+$doc = new hexydec\css\cssdoc();
+$options = $doc->config;
 
 // process form submmission
 if (!empty($_POST['action'])) {
@@ -93,7 +93,7 @@ if (!empty($_POST['action'])) {
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Hexydec HTML Minifier</title>
+		<title>Hexydec CSS Minifier</title>
 		<style>
 			html, body {
 				margin: 0;
@@ -166,9 +166,9 @@ if (!empty($_POST['action'])) {
 	<body>
 		<form action="<?= htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" accept-charset="<?= mb_internal_encoding(); ?>" class="minify__form">
 			<div class="minify__form-wrap">
-				<h1 class="minify__form-heading">HTML Minifier</h1>
+				<h1 class="minify__form-heading">CSS Minifier</h1>
 				<div class="minify__form-input">
-					<label for="source">Paste HTML:</label>
+					<label for="source">Paste CSS:</label>
 					<textarea name="source" id="source" class="minify__form-input-box"><?= htmlspecialchars($input); ?></textarea>
 				</div>
 				<div class="minify__form-url">
@@ -178,7 +178,7 @@ if (!empty($_POST['action'])) {
 				</div>
 				<?php if ($output) { ?>
 					<div class="minify__form-input">
-						<label for="output">Output HTML:</label>
+						<label for="output">Output CSS:</label>
 						<textarea id="output" class="minify__form-input-box"><?= htmlspecialchars($output); ?></textarea>
 					</div>
 					<table class="minify__table">
@@ -234,10 +234,6 @@ if (!empty($_POST['action'])) {
 					</table>
 				<?php } ?>
 			</div>
-			<?php if ($output) { ?>
-				<input type="hidden" name="base" value="<?= htmlspecialchars($base); ?>" />
-				<iframe class="minify__preview" srcdoc="<?= htmlspecialchars(str_replace('</title>', '</title><base href="'.htmlspecialchars($base).'">', $output)); ?>"></iframe>
-			<?php } ?>
 			<div class="minify__options">
 				<h3>Options</h3>
 				<ul class="minify__options-list">

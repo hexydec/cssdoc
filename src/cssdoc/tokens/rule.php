@@ -42,6 +42,7 @@ class rule {
 		$token = current($tokens);
 		do {
 			switch ($token['type']) {
+				case 'join':
 				case 'string':
 					if ($selector) {
 						$item = new selector($this);

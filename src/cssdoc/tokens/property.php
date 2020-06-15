@@ -55,15 +55,18 @@ class property {
 	 */
 	public function parse(array &$tokens) : bool {
 		$token = current($tokens);
+		$dash = '';
 		do {
-			if ($token['type'] == 'string') {
-				$prop = $token['value'];
+			if ($token['value'] == '-') {
+				$dash = '-';
+			} elseif ($token['type'] == 'string') {
+				$prop = $dash.$token['value'];
 				while (($token = next($tokens)) !== false) {
 					switch ($token['type']) {
+						case 'important':
+							$this->important = true;
+							break;
 						case 'string':
-							if ($token['value'] == '!important') {
-								$this->important = true;
-							}
 						case 'colon':
 							$this->name = $prop;
 						case 'comma':
@@ -94,7 +97,7 @@ class property {
 	 * @return void
 	 */
 	public function minify(array $minify) : void {
-		if ($minify['lowerproperties']) {
+		if ($minify['lowerproperties'] && $this->name) {
 			$this->name = mb_strtolower($this->name);
 		}
 		foreach ($this->value AS $item) {

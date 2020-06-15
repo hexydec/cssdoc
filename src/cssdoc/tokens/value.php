@@ -35,14 +35,21 @@ class value {
 		$token = current($tokens);
 		do {
 			switch ($token['type']) {
+				case 'important':
+					prev($tokens);
+					break 2;
 				case 'string':
 				case 'join':
-					if ($token['value'] == '!important') {
-						prev($tokens);
-						break 2;
-					} else {
-						$this->properties[] = $token['value'];
-					}
+					$value = [];
+					do {
+						if (in_array($token['type'], ['string', 'join'])) {
+							$value[] = $token['value'];
+						} else {
+							break;
+						}
+					} while (($token = next($tokens)) !== false);
+					prev($tokens);
+					$this->properties[] = implode('', $value);
 					break;
 				case 'colon':
 				case 'quotes':

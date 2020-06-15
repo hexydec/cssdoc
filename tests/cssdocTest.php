@@ -41,9 +41,10 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 				#id, .class, .class .class__item, .class > .class__item {
 					font-size: 3em;
 					display: flex;
+					-webkit-display: block;
 				}
 				',
-				'output' => '#id{font-size:3em;}#id,.class,.class .class__item,.class>.class__item{font-size:3em;display:flex;}'
+				'output' => '#id{font-size:3em;}#id,.class,.class .class__item,.class>.class__item{font-size:3em;display:flex;-webkit-display:block;}'
 			),
 			Array(
 				'input' => '
@@ -52,6 +53,61 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 					}
 				',
 				'output' => '#id{font-size:3em!important;}'
+			)
+		);
+		$config = $this->config;
+		$obj = new cssdoc();
+		foreach ($test AS $item) {
+			if ($obj->load($item['input'])) {
+				$obj->minify($config);
+				$this->assertEquals($item['output'], $obj->compile());
+			}
+		}
+	}
+
+	public function testCanMinifyUrls() {
+		$test = Array(
+			Array(
+				'input' => '#id {
+					background-image: url(test.png);
+				}',
+				'output' => '#id{background-image:url(test.png);}'
+			),
+			Array(
+				'input' => '#id {
+					background-image: url(folder/test.png);
+				}',
+				'output' => '#id{background-image:url(folder/test.png);}'
+			),
+			Array(
+				'input' => '#id {
+					background-image: url(/folder/test.png);
+				}',
+				'output' => '#id{background-image:url(/folder/test.png);}'
+			),
+			Array(
+				'input' => '#id {
+					background-image: url(https://github.com/hexydec/cssdoc/test.png);
+				}',
+				'output' => '#id{background-image:url(https://github.com/hexydec/cssdoc/test.png);}'
+			),
+			Array(
+				'input' => '#id {
+					background-image: url(../test.png);
+				}',
+				'output' => '#id{background-image:url(../test.png);}'
+			),
+			Array(
+				'input' => '#id {
+					background-image: url(../../test.png);
+				}',
+				'output' => '#id{background-image:url(../../test.png);}'
+			),
+			Array(
+				'input' => '#id {
+					background-image: url(../../folder/test.png);
+				}',
+				'output' => '#id{background-image:url(../../folder/test.png);}'
 			)
 		);
 		$config = $this->config;

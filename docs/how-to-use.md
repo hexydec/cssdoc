@@ -1,35 +1,25 @@
-# HTMLdoc: How to Use
+# CSSdoc: How to Use
 
-HTMLdoc has been designed to be as simple to use as possible, but with enough configuration options to control the output more closely.
+CSSdoc has been designed to be as simple to use as possible, but with enough configuration options to control the output more closely.
 
-## Configuring HTMLdoc
+## Configuring CSSdoc
 
-The default configuration has been setup to give the best options for most needs. If you do need to change the configuration, the configuration options can be passed to the object upon creation:
+CSSdoc is configured only through the minify and output options, there is not other configuration.
 
-```php
-$config = [
-	'elements' => [
-		'pre' => [
-			'span' // treat spans as pre formattted
-		]
-	]
-];
-$doc = new \hexydec\html\htmldoc($config);
-```
+## Loading CSS
 
-To see all of the configuration options, see the [API documentation for the `__construct()` method](api/construct.md).
-
-## Loading HTML
-
-HTML can be loaded in two ways, either from a string, or from a stream:
+CSS can be loaded in two ways, either from a string, or from a stream:
 
 ### From a String
 
 ```php
-$html = '<div>Hello World</div>'; // can be a snippet
+$css = '#test {
+	font-weight: bold;
+	color: red;
+}'; // can be a snippet
 $charset = mb_internal_encoding(); // UTF-8?
 
-$doc = new \hexydec\html\htmldoc();
+$doc = new \hexydec\css\cssdoc();
 if ($doc->load($html, $charset)) {
 	// do something
 }
@@ -38,23 +28,23 @@ if ($doc->load($html, $charset)) {
 ### From a Stream
 
 ```php
-$url = 'https://github.com/hexydec'; // of course you want to parse this page
+$url = 'https://github.githubassets.com/assets/github-12ad3ce380b8369cc49199a0e1805f6c.css';
 $context = stream_context_create([
 	'http' => [
-		'user-agent' => 'My HTML Bot 1.0 (Mozilla Compatible)',
+		'user-agent' => 'My CSS Bot 1.0 (Mozilla Compatible)',
 		'timeout' => 10
 	]
 ]);
 
-$doc = new \hexydec\html\htmldoc();
+$doc = new \hexydec\css\cssdoc();
 if ($doc->open($url, $context, $error)) {
 	// do something
 } else {
-	trigger_error('Could not parse HTML: '.$error, E_USER_WARNING);
+	trigger_error('Could not parse CSS: '.$error, E_USER_WARNING);
 }
 ```
 
-For more information, see the API documentation for the [`load()` method](api/load.md) and the [`open()` method](api/load.md).
+For more information, see the API documentation for the [`load()` method](api/load.md) and the [`open()` method](api/open.md).
 
 ## Finding Elements and Extracting Information
 
@@ -86,30 +76,30 @@ For more information, [see the API documentation](api/readme.md).
 
 ## Minifying Documents
 
-When minifying documents, HTMLdoc updates the internal representation of the document and some of the output settings. When the document is saved, the generated code will then be smaller.
+When minifying documents, CSSdoc updates the internal representation of the document and some of the output settings. When the document is saved, the generated code will then be smaller.
 
 ```php
-$doc = new \hexydec\html\htmldoc();
-if ($doc->load($html)) {
+$doc = new \hexydec\css\cssdoc();
+if ($doc->load($css)) {
 	$doc->minify(); // just run the minify method
 	echo $doc->save();
 }
 ```
 
-The `minify()` method can also accept an array of minification options to change what is minified and what is not, this can be useful for example for minification of HTML for emails.
+The `minify()` method can also accept an array of minification options to change what optimisations are performed.
 
 To see all the available options [see the API documentation](api/minify.md).
 
 ## Outputting Documents
 
-HTML can be rendered in the following ways from your HTMLdoc object:
+CSS can be rendered in the following ways from your CSSdoc object:
 
 ```php
-$doc = new \hexydec\html\htmldoc();
+$doc = new \hexydec\css\cssdoc();
 if ($doc->load($html)) {
 
 	// output as a string
-	echo $doc->html();
+	echo $doc->compile();
 
 	// output as a string with charset conversion
 	echo $doc->save(null, 'iso-8859-1');
