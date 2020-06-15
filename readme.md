@@ -1,67 +1,34 @@
-# HTMLDoc: PHP HTML Document Parser and Minifier
+# CSSDoc: PHP CSS Document Parser and Minifier
 
-A tokeniser based HTML and CSS document parser and minifier, written in PHP.
+A tokeniser based CSS document parser and minifier, written in PHP.
 
 ![Licence](https://img.shields.io/badge/Licence-MIT-lightgrey.svg)
-[![Build Status](https://api.travis-ci.org/hexydec/htmldoc.svg?branch=master)](https://travis-ci.org/hexydec/htmldoc)
-![Code Coverage](https://codecov.io/gh/hexydec/htmldoc/branch/master/graph/badge.svg)
+
+** This project is currently in beta, so you should test your implementation thoroughly before deployment **
 
 ## Description
 
-An HTML and CSS parser, primarily designed for minifying HTML documents, it also enables the document structure to be queried allowing attribute and textnode values to be extracted.
+A CSS parser, primarily designed for minifying CSS documents.
 
-Both parsers are designed around a tokeniser to make the document processing more reliable than regex based minifiers, which are a bit blunt and can be problematic if they match patterns in the wrong places.
+The parser designed around a tokeniser to make the document processing more reliable than regex based minifiers, which are a bit blunt and can be problematic if they match patterns in the wrong places.
 
 ## Usage
 
-To minify an HTML document:
+To minify a CSS document:
 
 ```php
-use hexydec\html\htmldoc;
-
-$doc = new htmldoc();
+$doc = new \hexydec\css\cssdoc();
 
 // load from a variable
-if ($doc->load($html) {
+if ($doc->load($css) {
 
 	// minify the document
 	$doc->minify();
 
-	// compile back to HTML
-	echo $doc->save();
+	// compile back to CSS
+	echo $doc->compiile();
 }
 ```
-
-To extract data from an HTML document:
-
-```php
-use hexydec\html\htmldoc;
-
-$doc = new htmldoc();
-
-// load from a URL this time
-if ($doc->open($url) {
-
-	// extract text
-	$text = $doc->find('.article__body')->text();
-
-	// extract attribute
-	$attr = $doc->find('.article__author-image')->attr('src');
-
-	// extract HTML
-	$html = $doc->find('.article__body')->html();
-}
-
-```
-
-## Documentation
-
-- [How it works](docs/how-it-works.md)
-- [How to use and examples](docs/how-to-use.md)
-- [API Reference](docs/api/readme.md)
-- [Mitigating Side Effects of Minification](docs/mitigating-side-effects.md)
-- [About Document Recycling](docs/recycling.md)
-- [Object Performance](docs/performance.md)
 
 ## Support
 
@@ -69,7 +36,7 @@ HTMLdoc supports PHP version 7.3+.
 
 ## Contributing
 
-If you find an issue with HTMLdoc, please create an issue in the tracker.
+If you find an issue with CSSdoc, please create an issue in the tracker.
 
 If you wish to fix an issues yourself, please fork the code, fix the issue, then create a pull request, and I will evaluate your submission.
 
