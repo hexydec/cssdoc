@@ -13,8 +13,6 @@
     "minimum-stability": "beta",
     "require": {},
 	"autoload": {
-		"psr-4": {
-			"hexydec\\cssdoc\\": "src/"
-		}
+		"classmap": ["src/"]
 	}
 }
