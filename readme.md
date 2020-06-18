@@ -32,7 +32,7 @@ if ($doc->load($css) {
 
 ## Support
 
-HTMLdoc supports PHP version 7.3+.
+CSSdoc supports PHP version 7.3+.
 
 ## Contributing
 
