@@ -63,6 +63,20 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 				$this->assertEquals($item['output'], $obj->compile());
 			}
 		}
+		if ($obj->open(__DIR__.'/templates/css.css')) {
+			$obj->minify(Array(
+				// 'css' => false, // minify css
+				'js' => false, // minify javascript
+				'whitespace' => false, // remove whitespace
+				'comments' => false, // remove comments
+				'urls' => false, // update internal URL's to be shorter
+				'attributes' => false, // remove values from boolean attributes);
+	   			'quotes' => false, // minify attribute quotes
+				'close' => false // don't write close tags where possible
+			));
+			$minified = file_get_contents(__DIR__.'/templates/css-minified.css');
+			$this->assertEquals(trim($minified), $obj->compile(), 'Can minify CSS');
+		}
 	}
 
 	public function testCanMinifyUrls() {

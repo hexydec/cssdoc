@@ -24,7 +24,7 @@ class cssdoc {
 	   'semicolon' => ';',
 	   'directive' => '@[a-z-]++',
 	   'important' => '!important\b',
-	   'string' => '[^\[\]{}\(\):;,>+~\^$!" \n\r\t]++',
+	   'string' => '[^\\/\\[\\]{}\\(\\):;,>+~\\^$!" \\n\\r\\t]++',
 	];
 
 	/**
@@ -142,7 +142,7 @@ class cssdoc {
 
 		// success
 		} else {
-			// var_dump($tokens);
+			var_dump($tokens);
 			return true;
 		}
 		return false;
