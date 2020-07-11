@@ -142,7 +142,7 @@ class cssdoc {
 
 		// success
 		} else {
-			var_dump($tokens);
+			// var_dump($tokens);
 			return true;
 		}
 		return false;
