@@ -25,10 +25,13 @@ class property {
 	protected $important = false;
 
 	/**
-	 * @var bool Whether the property hasa semi-colon to close it
+	 * @var bool Whether the property has a semi-colon to close it
 	 */
 	public $semicolon = false;
 
+	/**
+	 * @var string Any comment specified with the property
+	 */
 	protected $comment = null;
 
 	/**
@@ -117,7 +120,7 @@ class property {
 		$join = '';
 		foreach ($this->value AS $item) {
 			$css .= $join.$item->compile($options);
-			$join .= $b ? ', ' : ',';
+			$join = $b ? ', ' : ',';
 		}
 		if ($this->important) {
 			$css .= ($b ? ' ' : '').'!important';

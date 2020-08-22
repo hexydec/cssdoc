@@ -42,9 +42,10 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 					font-size: 3em;
 					display: flex;
 					-webkit-display: block;
+					font-family: "segoe UI", Verdana, Arial, sans-serif;
 				}
 				',
-				'output' => '#id{font-size:3em;}#id,.class,.class .class__item,.class>.class__item{font-size:3em;display:flex;-webkit-display:block;}'
+				'output' => '#id{font-size:3em;}#id,.class,.class .class__item,.class>.class__item{font-size:3em;display:flex;-webkit-display:block;font-family:"segoe UI",Verdana,Arial,sans-serif;}'
 			),
 			Array(
 				'input' => '
