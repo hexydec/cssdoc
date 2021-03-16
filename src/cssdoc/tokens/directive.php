@@ -66,7 +66,7 @@ class directive {
 					break;
 				case 'curlyopen':
 					next($tokens);
-					if (in_array($this->directive, ['@media', '@keyframes'])) {
+					if (in_array($this->directive, ['@media', '@keyframes', '@supports'])) {
 						$item = new document($this);
 						if ($item->parse($tokens)) {
 							$this->properties[] = $item;

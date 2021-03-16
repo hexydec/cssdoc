@@ -135,7 +135,7 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 		}
 	}
 
-	public function testCanMinifyMediaQueries() {
+	public function testCanMinifyAtRules() {
 		$test = Array(
 			Array(
 				'input' => '@media screen {
@@ -186,7 +186,35 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 				}
 				',
 				'output' => '@media (color){#id{font-size:3em;}}'
-			)
+			),
+			[
+				'input' => '@supports (display: grid) {
+					  div {
+					    display: grid;
+					  }
+					}',
+				'output' => '@supports (display:grid){div{display:grid;}}'
+			],
+			[
+				'input' => '@supports not (display: grid) {
+					  div {
+					    float: right;
+					  }
+					}',
+				'output' => '@supports not(display:grid){div{float:right;}}'
+			],
+			[
+				'input' => '@page {
+								margin: 1cm;
+							}',
+				'output' => '@page{margin:1cm;}'
+			],
+			[
+				'input' => '@page :first {
+								margin: 1cm;
+							}',
+				'output' => '@page :first{margin:1cm;}'
+			]
 		);
 		$config = $this->config;
 		$obj = new cssdoc();

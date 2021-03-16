@@ -1,16 +1,7 @@
-<phpunit bootstrap="src/autoload.php" backupGlobals="false" colors="true" convertErrorsToExceptions="true" convertNoticesToExceptions="true" convertWarningsToExceptions="true" strict="true">
+<phpunit bootstrap="src/autoload.php" backupGlobals="false" colors="true" convertErrorsToExceptions="true" convertNoticesToExceptions="true" convertWarningsToExceptions="true">
     <testsuites>
-        <testsuite name="HTMLDoc">
-            <file>tests/htmldocTest.php</file>
-        </testsuite>
-        <testsuite name="Find">
-            <file>tests/findHtmldocTest.php</file>
-        </testsuite>
-        <testsuite name="Minify">
-            <file>tests/minifyHtmldocTest.php</file>
-        </testsuite>
-        <testsuite name="CSSMin">
-            <file>tests/cssminTest.php</file>
+        <testsuite name="CSSdoc">
+            <file>tests/cssdocTest.php</file>
         </testsuite>
     </testsuites>
     <filter>
