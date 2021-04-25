@@ -42,8 +42,12 @@ class rule {
 		$token = current($tokens);
 		do {
 			switch ($token['type']) {
-				case 'join':
-				case 'string':
+				case 'curlyopen':
+					$selector = false;
+					break;
+				case 'curlyclose':
+					break 2;
+				default:
 					if ($selector) {
 						$item = new selector($this);
 						if ($item->parse($tokens)) {
@@ -56,11 +60,6 @@ class rule {
 						}
 					}
 					break;
-				case 'curlyopen':
-					$selector = false;
-					break;
-				case 'curlyclose':
-					break 2;
 			}
 		} while (($token = next($tokens)) !== false);
 		return !empty($this->selectors) && !empty($this->properties);

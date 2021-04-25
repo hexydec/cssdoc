@@ -104,8 +104,8 @@ class selector {
 					$join = null;
 					break;
 				case 'curlyopen':
-				case 'comma':
 					prev($tokens);
+				case 'comma':
 					break 2;
 			}
 		} while (($token = next($tokens)) !== false);

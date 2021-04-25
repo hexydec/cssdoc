@@ -53,6 +53,7 @@ class value {
 					break;
 				case 'colon':
 				case 'quotes':
+				case 'comma':
 					$this->properties[] = $token['value'];
 					break;
 				case 'bracketopen':
@@ -65,7 +66,6 @@ class value {
 				case 'comment':
 					$comment = $token['value'];
 					break;
-				case 'comma':
 				case 'semicolon':
 				case 'curlyopen':
 				case 'curlyclose':
@@ -138,7 +138,7 @@ class value {
 				}
 				$css .= '('.$item->compile($options).')';
 				$join = ' ';
-			} elseif (in_array($item, [':', '-', '+'])) {
+			} elseif (in_array($item, [':', '-', '+', ','])) {
 				$css .= $item;
 				$join = '';
 			} else {

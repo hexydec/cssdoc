@@ -1,6 +1,6 @@
 {
   "name": "CSSdoc",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A token based CSS Document parser and minifier written in PHP",
   "main": "index.js",
   "directories": {

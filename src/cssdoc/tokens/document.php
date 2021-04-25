@@ -47,14 +47,14 @@ class document {
 					$item->parse($tokens);
 					$this->rules[] = $item;
 					break;
-				case 'string':
+				case 'curlyclose':
+					prev($tokens);
+					break 2;
+				default:
 					$item = new rule($this);
 					$item->parse($tokens);
 					$this->rules[] = $item;
 					break;
-				case 'curlyclose':
-					prev($tokens);
-					break 2;
 			}
 		} while (($token = next($tokens)) !== false);
 		return !!$this->rules;

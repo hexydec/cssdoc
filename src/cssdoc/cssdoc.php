@@ -12,19 +12,19 @@ class cssdoc {
 	   'comment' => '\\/\\*[\d\D]*?\\*\\/',
 	   'quotes' => '(?<!\\\\)("(?:[^"\\\\]++|\\\\.)*+"|\'(?:[^\'\\\\]++|\\\\.)*+\')',
 	   'comparison' => '[\^*$<>]?=', // comparison operators for media queries or attribute selectors
-	   'join' => '[>+~*\/-]',
+	   'join' => '[>+~*\\/]|-(?!-)',
 	   'curlyopen' => '{',
 	   'curlyclose' => '}',
-	   'squareopen' => '\[',
-	   'squareclose' => '\]',
-	   'bracketopen' => '\(',
-	   'bracketclose' => '\)',
+	   'squareopen' => '\\[',
+	   'squareclose' => '\\]',
+	   'bracketopen' => '\\(',
+	   'bracketclose' => '\\)',
 	   'comma' => ',',
 	   'colon' => ':',
 	   'semicolon' => ';',
-	   'directive' => '@[a-z-]++',
+	   'directive' => '(?<!\\\\)@[a-z-]++',
 	   'important' => '!important\b',
-	   'string' => '[^\\/\\[\\]{}\\(\\):;,>+~\\^$!" \\n\\r\\t]++',
+	   'string' => '(?:[^\\/\\[\\]{}\\(\\):;,\\*>+~\\^$!" \\n\\r\\t]++|\\\\.)',
 	];
 
 	/**

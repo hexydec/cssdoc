@@ -54,6 +54,22 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 					}
 				',
 				'output' => '#id{font-size:3em!important;}'
+			),
+			Array(
+				'input' => '
+					* {
+						display: block;
+					}
+				',
+				'output' => '*{display:block;}'
+			),
+			Array(
+				'input' => '
+					*, :before, ::after {
+						display: block;
+					}
+				',
+				'output' => '*,:before,::after{display:block;}'
 			)
 		);
 		$config = $this->config;
@@ -581,6 +597,24 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 		foreach ($test AS $item) {
 			if ($obj->load($item['input'])) {
 				$obj->minify($config);
+				$this->assertEquals($item['output'], $obj->compile());
+			}
+		}
+	}
+
+	public function testCanHandleDifficultCss() {
+		$test = Array(
+			Array(
+				'input' => "a.awkward\@class {
+					display: block;
+				}",
+				'output' => 'a.awkward\@class{display:block}'
+			)
+		);
+		$obj = new cssdoc();
+		foreach ($test AS $item) {
+			if ($obj->load($item['input'])) {
+				$obj->minify();
 				$this->assertEquals($item['output'], $obj->compile());
 			}
 		}
