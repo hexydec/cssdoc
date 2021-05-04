@@ -605,10 +605,10 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 	public function testCanHandleDifficultCss() {
 		$test = Array(
 			Array(
-				'input' => "a.awkward\@class {
+				'input' => "a.awkward\\@class {
 					display: block;
 				}",
-				'output' => 'a.awkward\@class{display:block}'
+				'output' => 'a.awkward\\@class{display:block}'
 			)
 		);
 		$obj = new cssdoc();
