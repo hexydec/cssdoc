@@ -10,7 +10,7 @@ spl_autoload_register(function (string $class) : bool {
 		'hexydec\\css\\value' => __DIR__.'/tokens/value.php'
 	];
 	if (isset($classes[$class])) {
-		return require($classes[$class]);
+		return (bool) require($classes[$class]);
 	}
 	return false;
 });
