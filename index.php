@@ -34,7 +34,7 @@ if (!empty($_POST['action'])) {
 
 		// open the document
 		} elseif (($input = $doc->open($_POST['url'], null, $error)) === false) {
-			trigger_error('Could not load HTML: '.$error, E_USER_WARNING);
+			trigger_error('Could not load CSS: '.$error, E_USER_WARNING);
 
 		// save base URL
 		} else {
@@ -43,11 +43,11 @@ if (!empty($_POST['action'])) {
 
 	// handle directly entered source code
 	} elseif (empty($_POST['source'])) {
-		trigger_error('No URL or HTML source was posted', E_USER_WARNING);
+		trigger_error('No URL or CSS source was posted', E_USER_WARNING);
 
 	// load the source code
 	} elseif (!$doc->load($_POST['source'], null, $error)) {
-		trigger_error('Could not parse HTML: '.$error, E_USER_WARNING);
+		trigger_error('Could not parse CSS: '.$error, E_USER_WARNING);
 
 	// record the HTML
 	} else {

@@ -42,9 +42,10 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 					font-size: 3em;
 					display: flex;
 					-webkit-display: block;
+					font-family: "segoe UI", Verdana, Arial, sans-serif;
 				}
 				',
-				'output' => '#id{font-size:3em;}#id,.class,.class .class__item,.class>.class__item{font-size:3em;display:flex;-webkit-display:block;}'
+				'output' => '#id{font-size:3em;}#id,.class,.class .class__item,.class>.class__item{font-size:3em;display:flex;-webkit-display:block;font-family:"segoe UI",Verdana,Arial,sans-serif;}'
 			),
 			Array(
 				'input' => '
@@ -53,6 +54,22 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 					}
 				',
 				'output' => '#id{font-size:3em!important;}'
+			),
+			Array(
+				'input' => '
+					* {
+						display: block;
+					}
+				',
+				'output' => '*{display:block;}'
+			),
+			Array(
+				'input' => '
+					*, :before, ::after {
+						display: block;
+					}
+				',
+				'output' => '*,:before,::after{display:block;}'
 			)
 		);
 		$config = $this->config;
@@ -62,6 +79,20 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 				$obj->minify($config);
 				$this->assertEquals($item['output'], $obj->compile());
 			}
+		}
+		if ($obj->open(__DIR__.'/templates/css.css')) {
+			$obj->minify(Array(
+				// 'css' => false, // minify css
+				'js' => false, // minify javascript
+				'whitespace' => false, // remove whitespace
+				'comments' => false, // remove comments
+				'urls' => false, // update internal URL's to be shorter
+				'attributes' => false, // remove values from boolean attributes);
+	   			'quotes' => false, // minify attribute quotes
+				'close' => false // don't write close tags where possible
+			));
+			$minified = file_get_contents(__DIR__.'/templates/css-minified.css');
+			$this->assertEquals(trim($minified), $obj->compile(), 'Can minify CSS');
 		}
 	}
 
@@ -120,7 +151,7 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 		}
 	}
 
-	public function testCanMinifyMediaQueries() {
+	public function testCanMinifyAtRules() {
 		$test = Array(
 			Array(
 				'input' => '@media screen {
@@ -171,7 +202,35 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 				}
 				',
 				'output' => '@media (color){#id{font-size:3em;}}'
-			)
+			),
+			[
+				'input' => '@supports (display: grid) {
+					  div {
+					    display: grid;
+					  }
+					}',
+				'output' => '@supports (display:grid){div{display:grid;}}'
+			],
+			[
+				'input' => '@supports not (display: grid) {
+					  div {
+					    float: right;
+					  }
+					}',
+				'output' => '@supports not(display:grid){div{float:right;}}'
+			],
+			[
+				'input' => '@page {
+								margin: 1cm;
+							}',
+				'output' => '@page{margin:1cm;}'
+			],
+			[
+				'input' => '@page :first {
+								margin: 1cm;
+							}',
+				'output' => '@page :first{margin:1cm;}'
+			]
 		);
 		$config = $this->config;
 		$obj = new cssdoc();
@@ -538,6 +597,24 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 		foreach ($test AS $item) {
 			if ($obj->load($item['input'])) {
 				$obj->minify($config);
+				$this->assertEquals($item['output'], $obj->compile());
+			}
+		}
+	}
+
+	public function testCanHandleDifficultCss() {
+		$test = Array(
+			Array(
+				'input' => "a.awkward\\@class {
+					display: block;
+				}",
+				'output' => 'a.awkward\\@class{display:block}'
+			)
+		);
+		$obj = new cssdoc();
+		foreach ($test AS $item) {
+			if ($obj->load($item['input'])) {
+				$obj->minify();
 				$this->assertEquals($item['output'], $obj->compile());
 			}
 		}
