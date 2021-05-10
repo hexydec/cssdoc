@@ -627,6 +627,12 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 					font-size: 1em;;;;
 				}",
 				'output' => '.doubleSemi{display:block;font-size:1em}'
+			),
+			Array(
+				'input' => ".incorrect {
+					display: block; !important;
+				}",
+				'output' => '.incorrect{display:block}'
 			)
 		);
 		$obj = new cssdoc();

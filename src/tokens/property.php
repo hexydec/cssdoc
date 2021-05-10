@@ -62,7 +62,7 @@ class property {
 			do {
 				if ($token['value'] == '-') {
 					$dash = '-';
-				} elseif ($token['type'] == 'string') {
+				} elseif ($token['type'] === 'string') {
 					$prop = $dash.$token['value'];
 					while (($token = $tokens->next()) !== null) {
 						switch ($token['type']) {
@@ -87,7 +87,7 @@ class property {
 								break 3;
 						}
 					}
-				} elseif (!in_array($token['type'], ['whitespace', 'semicolon'], true)) {
+				} elseif ($token['type'] === 'curlyclose') {
 					$tokens->prev();
 					break;
 				}
