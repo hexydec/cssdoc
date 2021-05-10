@@ -87,7 +87,7 @@ class property {
 								break 3;
 						}
 					}
-				} elseif ($token['type'] != 'whitespace') {
+				} elseif (!in_array($token['type'], ['whitespace', 'semicolon'], true)) {
 					$tokens->prev();
 					break;
 				}

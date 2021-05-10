@@ -620,6 +620,13 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 					display: block;
 				}",
 				'output' => 'a.awkward\\@class{display:block}'
+			),
+			Array(
+				'input' => ".doubleSemi {
+					display: block;;
+					font-size: 1em;;;;
+				}",
+				'output' => '.doubleSemi{display:block;font-size:1em}'
 			)
 		);
 		$obj = new cssdoc();
