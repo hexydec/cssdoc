@@ -51,6 +51,8 @@ class rule {
 					case 'curlyopen':
 						$selector = false;
 						break;
+					case 'directive':
+						$tokens->prev();
 					case 'curlyclose':
 						break 2;
 					case 'whitespace':

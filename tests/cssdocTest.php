@@ -177,6 +177,17 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 				'output' => '@media screen and (max-width:800px){#id{font-size:3em;}}'
 			),
 			Array(
+				'input' => '/* Starts with a comment */
+
+				@media screen and ( max-width : 800px ) {
+					#id {
+						font-size: 3em;
+					}
+				}
+				',
+				'output' => '@media screen and (max-width:800px){#id{font-size:3em;}}'
+			),
+			Array(
 				'input' => '@media screen and ( max-width : 800px ) {
 					#id {
 						font-size: 3em;

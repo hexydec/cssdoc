@@ -53,8 +53,7 @@ class property {
 	/**
 	 * Parses CSS tokens
 	 *
-	 * @param tokenise &$tokens A tokenise object
-	 * @param array $config An array of configuration options
+	 * @param tokenise $tokens A tokenise object
 	 * @return bool Whether anything was parsed
 	 */
 	public function parse(tokenise $tokens) : bool {

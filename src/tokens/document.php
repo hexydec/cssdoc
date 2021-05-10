@@ -49,8 +49,8 @@ class document {
 					break;
 				case 'curlyclose':
 					$tokens->prev();
-					// prev($tokens);
 					break 2;
+				case 'comment':
 				case 'whitespace':
 					break;
 				default:
