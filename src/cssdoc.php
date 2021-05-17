@@ -38,10 +38,9 @@ class cssdoc {
 		'convertquotes' => true,
 		'removequotes' => true,
 		'shortenhex' => true,
-		'email' => false,
-		'maxline' => null,
 		'lowerproperties' => true,
 		'lowervalues' => true,
+		'email' => false,
 		'output' => 'minify'
 	];
 
@@ -49,30 +48,6 @@ class cssdoc {
 	 * @var document $document The root document
 	 */
 	protected $document;
-
-	/**
-	 * Calculates the length property
-	 *
-	 * @param string $var The name of the property to retrieve, currently 'length' and output
-	 * @return mixed The number of children in the object for length, the output config, or null if the parameter doesn't exist
-	 */
-	public function __get(string $var) {
-		if ($var == 'length') {
-			return \count($this->children);
-		} elseif ($var == 'config') {
-			return $this->config;
-		}
-		return null;
-	}
-
-	/**
-	 * Retrieves the children of the document as an array
-	 *
-	 * @return array An array of child nodes
-	 */
-	public function toArray() : array {
-		return $this->children;
-	}
 
 	/**
 	 * Open an HTML file from a URL
@@ -186,7 +161,6 @@ class cssdoc {
 
 		// set email options
 		if ($minify['email']) {
-			$minify['maxline'] = 800;
 			$minify['shortenhex'] = false;
 		}
 		$this->document->minify($minify);
