@@ -50,6 +50,20 @@ class cssdoc {
 	protected $document;
 
 	/**
+	 * Calculates the length property
+	 *
+	 * @param string $var The name of the property to retrieve, currently 'length' and output
+	 * @return mixed The number of children in the object for length, the output config, or null if the parameter doesn't exist
+	 */
+	public function __get(string $var) {
+		if ($var == 'length') {
+			return \count($this->children);
+		} elseif ($var == 'config') {
+			return $this->config;
+		}
+		return null;
+	}
+	/**
 	 * Open an HTML file from a URL
 	 *
 	 * @param string $url The address of the HTML file to retrieve
