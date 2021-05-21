@@ -33,6 +33,25 @@ if ($doc->load($css) {
 }
 ```
 
+You can test out the minifier online at [https://hexydec.com/cssdoc/](https://hexydec.com/cssdoc/), or run the supplied index.php file after installation.
+
+## Installation
+
+The easiest way to get up and running is to use composer:
+
+```
+$ composer install hexydec/cssdoc
+```
+
+CSSdoc requires [\hexydec\token\tokenise](https://github.com/hexydec/tokenise) to run, which you can install manually if not using composer.
+
+## Documentation
+
+- [How it works](docs/how-it-works.md)
+- [How to use and examples](docs/how-to-use.md)
+- [API Reference](docs/api/readme.md)
+- [Object Performance](docs/performance.md)
+
 ## Support
 
 CSSdoc supports PHP version 7.3+.

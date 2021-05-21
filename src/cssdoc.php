@@ -25,6 +25,7 @@ class cssdoc {
 	   'semicolon' => ';',
 	   'directive' => '(?<!\\\\)@[a-z-]++',
 	   'important' => '!important\b',
+	   'datauri' => '(?<=url\\()data:[^)]++',
 	   'string' => '(?:[^\\/\\[\\]{}\\(\\):;,\\*>+~\\^$!" \\n\\r\\t]++|\\\\.)',
 	];
 
@@ -32,22 +33,76 @@ class cssdoc {
 	 * @var array $config Object configuration array
 	 */
 	protected $config = [
-		'removesemicolon' => true,
-		'removezerounits' => true,
-		'removeleadingzero' => true,
-		'convertquotes' => true,
-		'removequotes' => true,
-		'shortenhex' => true,
-		'lowerproperties' => true,
-		'lowervalues' => true,
-		'email' => false,
-		'output' => 'minify'
+		'nested' => ['@media', '@supports', '@keyframes', '@-webkit-keyframes', '@-moz-keyframes', '@-o-keyframes'], // directive that can have nested rules
+		'spaced' => ['calc'], // values where spaces between operators must be retained
+		'quoted' => ['content', 'format', 'counters', '@charset'], // directives or properties where the contained values must be quoted
+		'casesensitive' => ['url'], // property values that should not be lowercased
+		'none' => ['border', 'background', 'outline'], // properties that can be changed to 0 when none
+		'colors' => [
+			'#f0ffff' => 'azure',
+			'#f5f5dc' => 'beige',
+			'#ffe4c4' => 'bisque',
+			'#a52a2a' => 'brown',
+			'#ff7f50' => 'coral',
+			'#ffd700' => 'gold',
+			'#008000' => 'green',
+			'#808080' => 'grey',
+			'#4b0082' => 'indigo',
+			'#fffff0' => 'ivory',
+			'#f0e68c' => 'khaki',
+			'#faf0e6' => 'linen',
+			'#000080' => 'navy',
+			'#808000' => 'olive',
+			'#ffa500' => 'orange',
+			'#da70d6' => 'orchid',
+			'#cd853f' => 'peru',
+			'#ffc0cb' => 'pink',
+			'#dda0dd' => 'plum',
+			'#f00' => 'red',
+			'#fa8072' => 'salmon',
+			'#a0522d' => 'sienna',
+			'#c0c0c0' => 'silver',
+			'#fffafa' => 'snow',
+			'#d2b48c' => 'tan',
+			'#008080' => 'teal',
+			'#ff6347' => 'tomato',
+			'#ee82ee' => 'violet',
+			'#f5deb3' => 'wheat'
+		],
+		'minify' => [
+			'semicolons' => true, // remove last semi-colon in each rule
+			'zerounits' => true, // remove the unit from 0 values where possible (0px => 0)
+			'leadingzeros' => true, // remove leading 0 from fractional values (0.5 => .5)
+			'quotes' => true, // remove quotes where possible (background: url("test.png") => background: url(test.png))
+			'convertquotes' => true, // convert single quotes to double quotes (content: '' => content: "")
+			'colors' => true, // shorten hex values and replace with named values where shorter (color: #FF0000 => color: red)
+			'time' => true, // shorten time values where possible (500ms => .5s)
+			'fontweight' => true, // shorten font-weight values (font-weight: bold => font-weight: 700)
+			'none' => true, // replace none with 0 where possible (border: none => border: 0)
+			'lowerproperties' => true, // lowercase property names (DISPLAY: BLOCK => display: BLOCK)
+			'lowervalues' => true // lowercase values where possible (DISPLAY: BLOCK => DISPLAY: block)
+		],
+		'output' => [
+			'style' => 'minify', // the output style, either 'minify' or 'beautify'
+			'prefix' => '' // a string to prefix every line with in beautify mode, used for adding indents to
+		]
 	];
 
 	/**
 	 * @var document $document The root document
 	 */
 	protected $document;
+
+	/**
+	 * Constructs the object
+	 *
+	 * @param array $config An array of configuration parameters that is recursively merged with the default config
+	 */
+	public function __construct(array $config = []) {
+		if ($config) {
+			$this->config = \array_replace_recursive($this->config, $config);
+		}
+	}
 
 	/**
 	 * Calculates the length property
@@ -171,12 +226,7 @@ class cssdoc {
 	 * @return void
 	 */
 	public function minify(array $minify = []) : void {
-		$minify = \array_merge($this->config, $minify);
-
-		// set email options
-		if ($minify['email']) {
-			$minify['shortenhex'] = false;
-		}
+		$minify = \array_merge($this->config['minify'], $minify);
 		$this->document->minify($minify);
 	}
 
@@ -187,7 +237,7 @@ class cssdoc {
 	 * @return void
 	 */
 	public function compile(array $options = []) : string {
-		$options = \array_merge($this->config, ['prefix' => ''], $options);
+		$options = \array_merge($this->config['output'], $options);
 		return $this->document->compile($options);
 	}
 

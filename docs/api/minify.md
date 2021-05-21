@@ -26,21 +26,27 @@ An optional array contains a list of configuration parameters to configure the m
 	</thead>
 	<tbody>
 		<tr>
-			<td><code>removesemicolon</code></td>
+			<td><code>semicolons</code></td>
 			<td>Boolean</td>
 			<td>Removes the semi-colon from the last property of each rule</td>
 			<td><code>true</code></td>
 		</tr>
 		<tr>
-			<td><code>removezerounits</code></td>
+			<td><code>zerounits</code></td>
 			<td>Boolean</td>
 			<td>Removes the unit specification from values that are 0</td>
 			<td><code>true</code></td>
 		</tr>
 		<tr>
-			<td><code>removeleadingzero</code></td>
+			<td><code>leadingzeros</code></td>
 			<td>Boolean</td>
 			<td>Removes the leading zero from decimal value < 0</td>
+			<td><code>true</code></td>
+		</tr>
+		<tr>
+			<td><code>quotes</code></td>
+			<td>Boolean</td>
+			<td>Removes quotes where they are not required</td>
 			<td><code>true</code></td>
 		</tr>
 		<tr>
@@ -50,15 +56,27 @@ An optional array contains a list of configuration parameters to configure the m
 			<td><code>true</code></td>
 		</tr>
 		<tr>
-			<td><code>removequotes</code></td>
+			<td><code>colors</code></td>
 			<td>Boolean</td>
-			<td>Removes quotes where they are not required</td>
+			<td>Shortens hexidecimal colours to 3 chars where possible, and replaces colour values with their name where shorter</td>
 			<td><code>true</code></td>
 		</tr>
 		<tr>
-			<td><code>shortenhex</code></td>
+			<td><code>time</code></td>
 			<td>Boolean</td>
-			<td>Shortens hexidecimal colours to 3 or 2 chars where possible</td>
+			<td>shorten time values where possible e.g. <code>500ms</code> becomes <code>.5s</code></td>
+			<td><code>true</code></td>
+		</tr>
+		<tr>
+			<td><code>fontweight</code></td>
+			<td>Boolean</td>
+			<td>Shortens <code>normal</code> and <code>bold</code> to <code>400</code> and <code>700</code> in the <code>font-weight</code> property</td>
+			<td><code>true</code></td>
+		</tr>
+		<tr>
+			<td><code>none</code></td>
+			<td>Boolean</td>
+			<td>replace <code>none</code> with <code>0</code> where possible</td>
 			<td><code>true</code></td>
 		</tr>
 		<tr>
@@ -72,12 +90,6 @@ An optional array contains a list of configuration parameters to configure the m
 			<td>Boolean</td>
 			<td>Lowercase property values where possible</td>
 			<td><code>true</code></td>
-		</tr>
-		<tr>
-			<td><code>email</code></td>
-			<td>Boolean</td>
-			<td>Makes the output email safe (Currently this sets the `shortenhex` setting to false)</td>
-			<td><code>false</code></td>
 		</tr>
 	</tbody>
 </table>

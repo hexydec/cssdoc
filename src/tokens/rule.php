@@ -6,7 +6,7 @@ use \hexydec\tokens\tokenise;
 class rule {
 
 	/**
-	 * @var mediaquery The parent htmldoc object
+	 * @var cssdoc The parent CSSdoc object
 	 */
 	protected $root;
 
@@ -30,7 +30,7 @@ class rule {
 	 *
 	 * @param cssdoc $root The parent htmldoc object
 	 */
-	public function __construct(document $root) {
+	public function __construct(cssdoc $root) {
 		$this->root = $root;
 	}
 
@@ -62,12 +62,12 @@ class rule {
 						break;
 					default:
 						if ($selector) {
-							$item = new selector($this);
+							$item = new selector($this->root);
 							if ($item->parse($tokens)) {
 								$this->selectors[] = $item;
 							}
 						} else {
-							$item = new property($this);
+							$item = new property($this->root);
 							if ($item->parse($tokens)) {
 								$this->properties[] = $item;
 							}
@@ -96,7 +96,7 @@ class rule {
 		foreach ($this->properties AS $item) {
 			$item->minify($minify);
 		}
-		if ($this->properties && $minify['removesemicolon']) {
+		if ($this->properties && $minify['semicolons']) {
 			\end($this->properties)->semicolon = false;
 		}
 	}
@@ -108,7 +108,7 @@ class rule {
 	 * @return void
 	 */
 	public function compile(array $options) : string {
-		$b = $options['output'] != 'minify';
+		$b = $options['style'] != 'minify';
 		$css = $options['prefix'];
 
 		// compile selectors

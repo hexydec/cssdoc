@@ -6,7 +6,7 @@ use \hexydec\tokens\tokenise;
 class directive {
 
 	/**
-	 * @var rule The parent rule object
+	 * @var cssdoc The parent CSSdoc object
 	 */
 	protected $root;
 
@@ -28,9 +28,9 @@ class directive {
 	/**
 	 * Constructs the comment object
 	 *
-	 * @param cssdoc $root The parent htmldoc object
+	 * @param cssdoc $root The parent cssdoc object
 	 */
-	public function __construct(document $root) {
+	public function __construct(cssdoc $root) {
 		$this->root = $root;
 	}
 
@@ -54,7 +54,7 @@ class directive {
 					case 'colon':
 					case 'bracketopen':
 						if ($properties) {
-							$item = new property($this);
+							$item = new property($this->root);
 							if ($item->parse($tokens)) {
 								$this->properties[] = $item;
 							}
@@ -62,15 +62,14 @@ class directive {
 						}
 					case 'quotes':
 						$tokens->prev();
-						$item = new value($this);
+						$item = new value($this->root, $this->directive);
 						if ($item->parse($tokens)) {
 							$this->content[] = $item;
 						}
 						break;
 					case 'curlyopen':
-						// next($tokens);
-						if (in_array($this->directive, ['@media', '@keyframes', '@supports'])) {
-							$item = new document($this);
+						if (in_array($this->directive, $this->root->config['nested'])) {
+							$item = new document($this->root);
 							if ($item->parse($tokens)) {
 								$this->properties[] = $item;
 							}
@@ -88,7 +87,7 @@ class directive {
 	}
 
 	/**
-	 * Minifies the internal representation of the comment
+	 * Minifies the internal representation of the diirective
 	 *
 	 * @param array $minify An array of minification options controlling which operations are performed
 	 * @return void
@@ -105,8 +104,8 @@ class directive {
 			$item->minify($minify);
 		}
 
-		if ($this->properties && $minify['removesemicolon']) {
-			$this->properties[count($this->properties)-1]->semicolon = false;
+		if ($this->properties && $minify['semicolons']) {
+			\end($this->properties)->semicolon = false;
 		}
 	}
 
@@ -117,7 +116,7 @@ class directive {
 	 * @return void
 	 */
 	public function compile(array $options) : string {
-		$b = $options['output'] != 'minify';
+		$b = $options['style'] != 'minify';
 		$css = $this->directive;
 		$join = ' ';
 		foreach ($this->content AS $item) {

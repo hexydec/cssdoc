@@ -6,7 +6,7 @@ use \hexydec\tokens\tokenise;
 class selector {
 
 	/**
-	 * @var rule The parent rule object
+	 * @var cssdoc The parent CSSdoc object
 	 */
 	protected $root;
 
@@ -20,8 +20,8 @@ class selector {
 	 *
 	 * @param cssdoc $root The parent htmldoc object
 	 */
-	public function __construct(rule $root) {
-		$this->root = $root;
+	public function __construct(cssdoc $root) {
+		
 	}
 
 	/**
@@ -132,7 +132,7 @@ class selector {
 	 * @return void
 	 */
 	public function compile(array $options) : string {
-		$space = $options['output'] != 'minify' ? ' ' : '';
+		$space = $options['style'] != 'minify' ? ' ' : '';
 		$css = '';
 		foreach ($this->selectors AS $item) {
 			if ($item['join']) {

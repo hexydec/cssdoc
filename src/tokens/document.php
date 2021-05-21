@@ -6,7 +6,7 @@ use \hexydec\tokens\tokenise;
 class document {
 
 	/**
-	 * @var cssdoc The parent htmldoc object
+	 * @var cssdoc The parent CSSdoc object
 	 */
 	protected $root;
 
@@ -25,7 +25,7 @@ class document {
 	 *
 	 * @param cssdoc $root The parent htmldoc object
 	 */
-	public function __construct($root, array $media = null) {
+	public function __construct(cssdoc $root, array $media = null) {
 		$this->root = $root;
 		$this->media = $media;
 	}
@@ -43,7 +43,7 @@ class document {
 		while (($token = $tokens->next()) !== null) {
 			switch ($token['type']) {
 				case 'directive':
-					$item = new directive($this);
+					$item = new directive($this->root);
 					$item->parse($tokens);
 					$this->rules[] = $item;
 					break;
@@ -54,7 +54,7 @@ class document {
 				case 'whitespace':
 					break;
 				default:
-					$item = new rule($this);
+					$item = new rule($this->root);
 					if ($item->parse($tokens)) {
 						$this->rules[] = $item;
 					}
@@ -83,7 +83,7 @@ class document {
 	 * @return void
 	 */
 	public function compile(array $options) : string {
-		$b = $options['output'] != 'minify';
+		$b = $options['style'] != 'minify';
 		$css = '';
 
 		// compile selectors

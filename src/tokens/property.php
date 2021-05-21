@@ -6,7 +6,7 @@ use \hexydec\tokens\tokenise;
 class property {
 
 	/**
-	 * @var rule The parent rule object
+	 * @var cssdoc The parent CSSdoc object
 	 */
 	protected $root;
 
@@ -38,16 +38,10 @@ class property {
 	/**
 	 * Constructs the property object
 	 *
-	 * @param cssdoc $root The parent htmldoc object
+	 * @param cssdoc $root The parent cssdoc object
 	 */
-	public function __construct($root) {
+	public function __construct(cssdoc $root) {
 		$this->root = $root;
-	}
-
-	public function __get($prop) {
-		if ($prop == 'name') {
-			return $this->{$prop};
-		}
 	}
 
 	/**
@@ -73,7 +67,7 @@ class property {
 							case 'colon':
 								$this->name = $prop;
 							case 'comma':
-								$item = new value($this);
+								$item = new value($this->root, $this->name);
 								if ($item->parse($tokens)) {
 									$this->value[] = $item;
 								}
@@ -107,7 +101,7 @@ class property {
 			$this->name = \mb_strtolower($this->name);
 		}
 		foreach ($this->value AS $item) {
-			$item->minify($minify, $this->name);
+			$item->minify($minify);
 		}
 	}
 
@@ -118,7 +112,7 @@ class property {
 	 * @return void
 	 */
 	public function compile(array $options) : string {
-		$b = $options['output'] != 'minify';
+		$b = $options['style'] != 'minify';
 		$css = $options['prefix'].$this->name.':'.($b ? ' ' : '');
 		$join = '';
 		foreach ($this->value AS $item) {
