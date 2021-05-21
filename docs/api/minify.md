@@ -64,7 +64,7 @@ An optional array contains a list of configuration parameters to configure the m
 		<tr>
 			<td><code>time</code></td>
 			<td>Boolean</td>
-			<td>shorten time values where possible e.g. <code>500ms</code> becomes <code>.5s</code></td>
+			<td>Shortens time values where possible e.g. <code>500ms</code> becomes <code>.5s</code></td>
 			<td><code>true</code></td>
 		</tr>
 		<tr>
@@ -76,19 +76,19 @@ An optional array contains a list of configuration parameters to configure the m
 		<tr>
 			<td><code>none</code></td>
 			<td>Boolean</td>
-			<td>replace <code>none</code> with <code>0</code> where possible</td>
+			<td>Replaces <code>none</code> with <code>0</code> where possible</td>
 			<td><code>true</code></td>
 		</tr>
 		<tr>
 			<td><code>lowerproperties</code></td>
 			<td>Boolean</td>
-			<td>Lowercase property names</td>
+			<td>Lowercases property names</td>
 			<td><code>true</code></td>
 		</tr>
 		<tr>
 			<td><code>lowervalues</code></td>
 			<td>Boolean</td>
-			<td>Lowercase property values where possible</td>
+			<td>Lowercases property values where possible</td>
 			<td><code>true</code></td>
 		</tr>
 	</tbody>

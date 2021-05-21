@@ -11,11 +11,6 @@ class document {
 	protected $root;
 
 	/**
-	 * @var array An array of media query parameters
-	 */
-	protected $media = [];
-
-	/**
 	 * @var array An array of child token objects
 	 */
 	protected $rules = [];
@@ -25,9 +20,8 @@ class document {
 	 *
 	 * @param cssdoc $root The parent htmldoc object
 	 */
-	public function __construct(cssdoc $root, array $media = null) {
+	public function __construct(cssdoc $root) {
 		$this->root = $root;
-		$this->media = $media;
 	}
 
 	/**
@@ -91,9 +85,6 @@ class document {
 		foreach ($this->rules AS $item) {
 			$css .= $join.$item->compile($options);
 			$join = $b ? "\n\n" : '';
-		}
-		if ($this->media) {
-			$css .= '}';
 		}
 		return $css;
 	}

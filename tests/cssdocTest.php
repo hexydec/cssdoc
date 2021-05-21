@@ -83,7 +83,7 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 		$this->compareMinify($tests, $this->config);
 
 		// test importing file
-		$obj = new cssdoc();
+		$obj = new cssdoc(['colors' => ['#639' => 'rebeccapurple']]);
 		if ($obj->open(__DIR__.'/templates/css.css')) {
 			$obj->minify();
 			$minified = trim(file_get_contents(__DIR__.'/templates/css-minified.css'));
@@ -92,6 +92,13 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 			$obj->load($minified);
 			$obj->minify();
 			$this->assertEquals($minified, $obj->compile());
+
+			// test save method
+			$this->assertEquals($minified, $obj->save());
+			$file = __DIR__.'/test.css';
+			$this->assertEquals(true, $obj->save($file, ['style' => 'beautify']));
+			$this->assertEquals(true, file_exists($file));
+			unlink($file);
 		}
 	}
 
