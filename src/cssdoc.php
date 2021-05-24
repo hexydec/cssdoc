@@ -33,7 +33,7 @@ class cssdoc {
 	 * @var array $config Object configuration array
 	 */
 	protected $config = [
-		'nested' => ['@media', '@supports', '@keyframes', '@-webkit-keyframes', '@-moz-keyframes', '@-o-keyframes'], // directive that can have nested rules
+		'nested' => ['@media', '@supports', '@keyframes', '@-webkit-keyframes', '@-moz-keyframes', '@-o-keyframes', '@document', '@-moz-document'], // directive that can have nested rules
 		'spaced' => ['calc'], // values where spaces between operators must be retained
 		'quoted' => ['content', 'format', 'counters', '@charset'], // directives or properties where the contained values must be quoted
 		'casesensitive' => ['url'], // property values that should not be lowercased
