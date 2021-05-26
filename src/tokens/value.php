@@ -109,23 +109,73 @@ class value {
 				$item->minify($minify);
 			} else {
 
-				// starts with a 0
-				if (mb_strpos($item, '0') === 0) {
-					// remove unit from zero values
-					if ($minify['zerounits'] && !$this->brackets && \preg_match('/^0(?:\.0*)?((?!m?s)[a-z%]++)$/i', $item, $match)) {
-						$item = '0';
-						if ($match[1] == 'ms') {
-							$match[1] = 's';
-						}
-						if ($match[1] == 's') {
-							$item .= 's';
+				// shorten font-weight
+				if ($minify['fontweight'] && $name === 'font-weight') {
+					$convert = [
+						'normal' => '400',
+						'bold' => '700'
+					];
+					$key = \mb_strtolower($item);
+					if (isset($convert[$key])) {
+						$item = $convert[$key];
+					}
+
+				// shorten hex values
+				} elseif ($minify['colors'] && \mb_strpos($item, '#') === 0) {
+
+					// shorten hex values
+					if (\preg_match('/^#(([a-f0-9])\\2)(([a-f0-9])\\4)(([a-f0-9])\\6)/i', $item, $match)) {
+						$item = '#'.$match[2].$match[4].$match[6];
+					}
+
+					// replace with named colours
+					$colour = \strtolower($item);
+					if (isset($config['colors'][$colour])) {
+						$item = $config['colors'][$colour];
+					}
+
+				// starts with a digit
+				} elseif (\strpbrk($item[0], '0123456789.') !== false && \preg_match('/^(0*)([0-9]*)(?:((?U)\\.[0-9]*)(0*))?([a-z%]*)$/i', $item, $match)) {
+
+					// remove leading 00s
+					if ($minify['leadingzeros'] && ($match[2] || $match[3])) {
+						$match[1] = '';
+					}
+
+					// remove leading 00s
+					if ($minify['trailingzeros']) {
+						$match[4] = '';
+
+						// remove decimal place if no other values
+						if ($match[3] === '.') {
+							$match[3] = '';
 						}
 					}
 
-					// remove leading zeros
-					if ($minify['leadingzeros'] && \preg_match('/^0++(\.0*+[1-9][0-9%a-z]*+)$/', $item, $match)) {
-						$item = $match[1];
+					$unit = \strtolower($match[5]);
+
+					// shorten time values
+					if ($minify['time'] && $unit === 'ms' && ($len = \strlen($match[2])) >= 3 && $match[2][$len-1] === '0') {
+						if (($match[3] = rtrim(\substr($match[2], -3), '0')) !== '') {
+							$match[3] = '.'.$match[3];
+						}
+						$match[2] = $len > 3 ? \substr($match[2], 0, -3) : '';
+						$match[5] = 's';
+
+					// remove unit on 0 values, not inside brackets where they must remain
+					} elseif ($minify['zerounits'] && $match[1] === '0' && !$match[2] && !$match[3] && !\in_array($unit, ['s', 'ms']) && !$this->brackets) {
+						$match[5] = '';
 					}
+
+					// reduce decimal places
+					if ($minify['decimalplaces'] !== null && \strlen($match[3]) > $minify['decimalplaces']) {
+						$match[3] = $minify['decimalplaces'] ? \substr($match[3], 0, $minify['decimalplaces'] + 1) : '';
+						$match[4] = '';
+					}
+
+					// rebuild value
+					unset($match[0]);
+					$item = implode('', $match);
 				}
 
 				// quoted values
@@ -143,38 +193,6 @@ class value {
 				// lowercase non quoted values
 				} elseif ($minify['lowervalues'] && !\in_array($name, $config['casesensitive'])) {
 					$item = \mb_strtolower($item);
-				}
-
-				// shorten hex values
-				if ($minify['colors'] && \mb_strpos($item, '#') === 0) {
-
-					// shorten hex values
-					if (\preg_match('/^#(([a-f0-9])\\2)(([a-f0-9])\\4)(([a-f0-9])\\6)/i', $item, $match)) {
-						$item = '#'.$match[2].$match[4].$match[6];
-					}
-
-					// replace with named colours
-					$colour = \strtolower($item);
-					if (isset($config['colors'][$colour])) {
-						$item = $config['colors'][$colour];
-					}
-				}
-
-				// shorten time values
-				if ($minify['time'] && \mb_strpos($item, 'ms') && \preg_match('/([0-9]*)([1-9][0-9])0ms/i', $item, $match)) {
-					$item = ltrim($match[1], '0').'.'.rtrim($match[2], '0').'s';
-				}
-
-				// shorten font-weight
-				if ($minify['fontweight'] && $name === 'font-weight') {
-					$convert = [
-						'normal' => '400',
-						'bold' => '700'
-					];
-					$key = \mb_strtolower($item);
-					if (isset($convert[$key])) {
-						$item = $convert[$key];
-					}
 				}
 			}
 		}

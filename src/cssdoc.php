@@ -73,6 +73,8 @@ class cssdoc {
 			'semicolons' => true, // remove last semi-colon in each rule
 			'zerounits' => true, // remove the unit from 0 values where possible (0px => 0)
 			'leadingzeros' => true, // remove leading 0 from fractional values (0.5 => .5)
+			'trailingzeros' => true, // remove any trailing 0's from fractional values (74.0 => 74)
+			'decimalplaces' => 4, // maximum number of decimal places for a value
 			'quotes' => true, // remove quotes where possible (background: url("test.png") => background: url(test.png))
 			'convertquotes' => true, // convert single quotes to double quotes (content: '' => content: "")
 			'colors' => true, // shorten hex values and replace with named values where shorter (color: #FF0000 => color: red)

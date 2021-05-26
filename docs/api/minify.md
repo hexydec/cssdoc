@@ -44,6 +44,18 @@ An optional array contains a list of configuration parameters to configure the m
 			<td><code>true</code></td>
 		</tr>
 		<tr>
+			<td><code>trailingzeros</code></td>
+			<td>Boolean</td>
+			<td>Removes any trailing 0's from fractional values (74.0 => 74)</td>
+			<td><code>true</code></td>
+		</tr>
+		<tr>
+			<td><code>decimalplaces</code></td>
+			<td>Integer</td>
+			<td>Maximum number of decimal places for a value</td>
+			<td><code>4</code></td>
+		</tr>
+		<tr>
 			<td><code>quotes</code></td>
 			<td>Boolean</td>
 			<td>Removes quotes where they are not required</td>

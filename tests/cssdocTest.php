@@ -4,18 +4,19 @@ use hexydec\css\cssdoc;
 final class cssdocTest extends \PHPUnit\Framework\TestCase {
 
 	protected $config = [
-   		'semicolons' => false,
-   		'zerounits' => false,
-   		'leadingzeros' => false,
-   		'convertquotes' => false,
-   		'quotes' => false,
-   		'colors' => false,
-		'time' => false,
-		'fontweight' => false,
-		'lowerproperties' => false,
-		'lowervalues' => false,
-		'none' => false,
-	   	'output' => 'minify'
+		'semicolons' => false, // remove last semi-colon in each rule
+		'zerounits' => false, // remove the unit from 0 values where possible (0px => 0)
+		'leadingzeros' => false, // remove leading 0 from fractional values (0.5 => .5)
+		'trailingzeros' => false, // remove any trailing 0's from fractional values (74.0 => 74)
+		'decimalplaces' => null, // maximum number of decimal places for a value
+		'quotes' => false, // remove quotes where possible (background: url("test.png") => background: url(test.png))
+		'convertquotes' => false, // convert single quotes to double quotes (content: '' => content: "")
+		'colors' => false, // shorten hex values and replace with named values where shorter (color: #FF0000 => color: red)
+		'time' => false, // shorten time values where possible (500ms => .5s)
+		'fontweight' => false, // shorten font-weight values (font-weight: bold => font-weight: 700)
+		'none' => false, // replace none with 0 where possible (border: none => border: 0)
+		'lowerproperties' => false, // lowercase property names (DISPLAY: BLOCK => display: BLOCK)
+		'lowervalues' => false // lowercase values where possible (DISPLAY: BLOCK => DISPLAY: block)
 	];
 
 	public function testCanMinifyCss() {
@@ -322,8 +323,9 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 				}
 				.class {
 					transition: all 500ms;
+					transition-delay: 0s;
 				}',
-				'output' => '#id{margin:0 0 20px 0;}.class{transition:all 500ms;}'
+				'output' => '#id{margin:0 0 20px 0;}.class{transition:all 500ms;transition-delay:0s;}'
 			],
 			[
 				'input' => '#id {
@@ -351,12 +353,58 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 			[
 				'input' => '#id {
 					font-size: 0.9em;
+					transition: all 0000.5s;
 				}',
-				'output' => '#id{font-size:.9em;}'
+				'output' => '#id{font-size:.9em;transition:all .5s;}'
 			]
 		];
 		$config = $this->config;
 		$config['leadingzeros'] = true;
+		$this->compareMinify($tests, $config);
+	}
+
+	public function testCanRemoveTrailingZeros() {
+		$tests = [
+			[
+				'input' => '#id {
+					font-size: 14.0em;
+					transition: all 500ms;
+					transition-delay: 3.2000s;
+					padding: 32.5000px;
+				}',
+				'output' => '#id{font-size:14em;transition:all 500ms;transition-delay:3.2s;padding:32.5px;}'
+			]
+		];
+		$config = $this->config;
+		$config['trailingzeros'] = true;
+		$this->compareMinify($tests, $config);
+	}
+
+	public function testCanReduceDecimalPlaces() {
+		$tests = [
+			[
+				'input' => '#id {
+					font-size: 0.983872384882657em;
+					width: 33.3333333333333333%;
+				}',
+				'output' => '#id{font-size:0.9838em;width:33.3333%;}'
+			]
+		];
+		$config = $this->config;
+		$config['decimalplaces'] = 4;
+		$this->compareMinify($tests, $config);
+
+		// check decimalplaces = 0;
+		$tests = [
+			[
+				'input' => '#id {
+					font-size: 0.983872384882657em;
+					width: 33.3333333333333333%;
+				}',
+				'output' => '#id{font-size:0em;width:33%;}'
+			]
+		];
+		$config['decimalplaces'] = 0;
 		$this->compareMinify($tests, $config);
 	}
 
@@ -519,13 +567,25 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 				'input' => '#id {
 					transition: all 001450ms;
 				}',
-				'output' => '#id{transition:all 1.45s;}'
+				'output' => '#id{transition:all 001.45s;}'
+			],
+			[
+				'input' => '#id {
+					transition: all 31450ms;
+				}',
+				'output' => '#id{transition:all 31.45s;}'
+			],
+			[
+				'input' => '#id {
+					transition: all 31450MS;
+				}',
+				'output' => '#id{transition:all 31.45s;}'
 			],
 			[
 				'input' => '#id {
 					transition: all 00450ms;
 				}',
-				'output' => '#id{transition:all .45s;}'
+				'output' => '#id{transition:all 00.45s;}'
 			]
 		];
 		$config = $this->config;
