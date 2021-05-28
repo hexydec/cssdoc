@@ -18,12 +18,12 @@ class directive {
 	/**
 	 * @var string The value of the directive
 	 */
-	protected $content = [];
+	public $content = [];
 
 	/**
 	 * @var array An array of properties
 	 */
-	protected $properties = [];
+	public $properties = [];
 
 	/**
 	 * Constructs the comment object
@@ -100,8 +100,12 @@ class directive {
 		}
 
 		// minify properties
-		foreach ($this->properties AS $item) {
-			$item->minify($minify);
+		foreach ($this->properties AS $key => $item) {
+			if (!isset($item->rules) || !empty($item->rules)) {
+				$item->minify($minify);
+			} else {
+				unset($this->properties[$key]);
+			}
 		}
 
 		if ($this->properties && $minify['semicolons']) {

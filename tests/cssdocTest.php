@@ -796,6 +796,64 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 		$this->compareMinify($tests);
 	}
 
+	protected function testCanDeleteEmptyDirecctiveAndRules() {
+		$tests = [
+			[
+				'input' => '
+					@media screen {}
+				',
+				'output' => ''
+			],
+			[
+				'input' => '
+					@media screen {
+						.nothing {}
+						.another__nothing {}
+					}
+				',
+				'output' => ''
+			],
+			[
+				'input' => '
+					@media screen {
+						.something {
+							display: block;
+						}
+						.another__nothing {}
+					}
+				',
+				'output' => '@media screen{.something{display:block;}}'
+			],
+			[
+				'input' => '
+					@media screen {
+						.nothing {}
+						.another__nothing {}
+					}
+					.something {
+						display: block;
+					}
+				',
+				'output' => '.something{display:block}'
+			],
+			[
+				'input' => '
+					@page {}
+				',
+				'output' => ''
+			],
+			[
+				'input' => '
+					@page {
+						display: block;
+					}
+				',
+				'output' => '@page{display:block}'
+			],
+		];
+		$this->compareMinify($tests);
+	}
+
 	protected function compareMinify(array $tests, array $minify = []) {
 		$obj = new cssdoc();
 		foreach ($tests AS $item) {

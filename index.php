@@ -164,7 +164,7 @@ if (!empty($_POST['action'])) {
 		</style>
 	</head>
 	<body>
-		<form action="<?= htmlspecialchars($_SERVER['REQUEST_URI']); ?>" method="post" accept-charset="<?= mb_internal_encoding(); ?>" class="minify__form">
+		<form action="<?= htmlspecialchars($_SERVER['REQUEST_URI']); ?>" method="post" accept-charset="<?= mb_internal_encoding(); ?>" class="minify__form" novalidate="novalidate">
 			<div class="minify__form-wrap">
 				<h1 class="minify__form-heading">CSS Minifier</h1>
 				<div class="minify__form-input">

@@ -13,7 +13,7 @@ class document {
 	/**
 	 * @var array An array of child token objects
 	 */
-	protected $rules = [];
+	public $rules = [];
 
 	/**
 	 * Constructs the comment object
@@ -65,8 +65,15 @@ class document {
 	 * @return void
 	 */
 	public function minify(array $minify) : void {
-		foreach ($this->rules AS $item) {
+		foreach ($this->rules AS $key => $item) {
 			$item->minify($minify);
+		}
+
+			// delete rules that have no properties
+		foreach ($this->rules AS $key => $item) {
+			if (!$item->properties && (get_class($item) !== __NAMESPACE__.'\\directive' || !$item->content)) {
+				unset($this->rules[$key]);
+			}
 		}
 	}
 

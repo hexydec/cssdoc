@@ -18,7 +18,7 @@ class rule {
 	/**
 	 * @var array An array of properties
 	 */
-	protected $properties = [];
+	public $properties = [];
 
 	/**
 	 * @var string A comment
