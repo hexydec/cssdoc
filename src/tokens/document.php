@@ -67,11 +67,9 @@ class document {
 	public function minify(array $minify) : void {
 		foreach ($this->rules AS $key => $item) {
 			$item->minify($minify);
-		}
 
 			// delete rules that have no properties
-		foreach ($this->rules AS $key => $item) {
-			if (!$item->properties && (get_class($item) !== __NAMESPACE__.'\\directive' || !$item->content)) {
+			if ($item->isEmpty()) {
 				unset($this->rules[$key]);
 			}
 		}

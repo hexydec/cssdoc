@@ -838,6 +838,18 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 			],
 			[
 				'input' => '
+					@media screen and (max-width: 400px) {
+						.nothing {}
+						.another__nothing {}
+					}
+					.something {
+						display: block;
+					}
+				',
+				'output' => '.something{display:block}'
+			],
+			[
+				'input' => '
 					@page {}
 				',
 				'output' => ''

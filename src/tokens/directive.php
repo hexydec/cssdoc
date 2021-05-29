@@ -26,6 +26,11 @@ class directive {
 	public $properties = [];
 
 	/**
+	 * @var document A document object
+	 */
+	public $document = null;
+
+	/**
 	 * Constructs the comment object
 	 *
 	 * @param cssdoc $root The parent cssdoc object
@@ -71,7 +76,7 @@ class directive {
 						if (in_array($this->directive, $this->root->config['nested'])) {
 							$item = new document($this->root);
 							if ($item->parse($tokens)) {
-								$this->properties[] = $item;
+								$this->document = $item;
 							}
 						} else {
 							$properties = true;
@@ -111,6 +116,22 @@ class directive {
 		if ($this->properties && $minify['semicolons']) {
 			\end($this->properties)->semicolon = false;
 		}
+
+		// minify document
+		if ($this->document) {
+			$this->document->minify($minify);
+			if (!$this->document->rules) {
+				$this->document = null;
+			}
+		}
+	}
+
+	public function isEmpty() {
+		if (in_array($this->directive, $this->root->config['nested'])) {
+			return $this->document === null;
+		} else {
+			return !$this->properties && !$this->content;
+		}
 	}
 
 	/**
@@ -123,21 +144,34 @@ class directive {
 		$b = $options['style'] != 'minify';
 		$css = $this->directive;
 		$join = ' ';
+
+		// compile content
 		foreach ($this->content AS $item) {
 			$css .= $join.$item->compile($options);
 			$join = $b ? ', ' : ',';
 		}
+		if (!$this->properties && !$this->document) {
+			$css .= ';';
+		}
+
+		// compile properties
 		if ($this->properties) {
 			$css .= $b ? ' {' : '{';
 
 			// compile properties
-			$tab = $b ? "\n\t" : '';
+			$tab = $b ? "\n\t".$options['prefix'] : '';
 			foreach ($this->properties AS $item) {
 				$css .= $tab.$item->compile($options);
 			}
 			$css .= $b ? "\n".$options['prefix'].'}' : '}';
-		} else {
-			$css .= ';';
+		}
+
+		// compile document
+		if ($this->document) {
+			$css .= $b ? ' {' : '{';
+			$tab = $b ? "\n\t".$options['prefix'] : '';
+			$css .= $tab.$this->document->compile($options);
+			$css .= $b ? "\n".$options['prefix'].'}' : '}';
 		}
 		return $css;
 	}

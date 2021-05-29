@@ -101,6 +101,10 @@ class rule {
 		}
 	}
 
+	public function isEmpty() {
+		return !$this->properties;
+	}
+
 	/**
 	 * Compile the property to a string
 	 *
