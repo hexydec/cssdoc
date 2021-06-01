@@ -69,7 +69,7 @@ class document {
 			$item->minify($minify);
 
 			// delete rules that have no properties
-			if ($item->isEmpty()) {
+			if ($minify['empty'] && $item->isEmpty()) {
 				unset($this->rules[$key]);
 			}
 		}

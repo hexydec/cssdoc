@@ -16,7 +16,8 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 		'fontweight' => false, // shorten font-weight values (font-weight: bold => font-weight: 700)
 		'none' => false, // replace none with 0 where possible (border: none => border: 0)
 		'lowerproperties' => false, // lowercase property names (DISPLAY: BLOCK => display: BLOCK)
-		'lowervalues' => false // lowercase values where possible (DISPLAY: BLOCK => DISPLAY: block)
+		'lowervalues' => false, // lowercase values where possible (DISPLAY: BLOCK => DISPLAY: block)
+		'empty' => false // delete empty rules and @directives
 	];
 
 	public function testCanMinifyCss() {
@@ -454,6 +455,14 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 				'input' => '@charset   "utf-8"   ;',
 				'output' => '@charset "utf-8";'
 			],
+			[
+				'input' => '@property --ms-tens {
+				  initial-value: 0;
+				  inherits: false;
+				  syntax: "<integer>";
+			  }',
+			  'output' => '@property --ms-tens{initial-value:0;inherits:false;syntax:"<integer>";}'
+			]
 		];
 		$config = $this->config;
 		$config['quotes'] = true;
@@ -796,7 +805,7 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 		$this->compareMinify($tests);
 	}
 
-	protected function testCanDeleteEmptyDirecctiveAndRules() {
+	public function testCanDeleteEmptyDirectiveAndRules() {
 		$tests = [
 			[
 				'input' => '
@@ -834,7 +843,7 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 						display: block;
 					}
 				',
-				'output' => '.something{display:block}'
+				'output' => '.something{display:block;}'
 			],
 			[
 				'input' => '
@@ -846,7 +855,7 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 						display: block;
 					}
 				',
-				'output' => '.something{display:block}'
+				'output' => '.something{display:block;}'
 			],
 			[
 				'input' => '
@@ -860,10 +869,12 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 						display: block;
 					}
 				',
-				'output' => '@page{display:block}'
+				'output' => '@page{display:block;}'
 			],
 		];
-		$this->compareMinify($tests);
+		$config = $this->config;
+		$config['empty'] = true;
+		$this->compareMinify($tests, $config);
 	}
 
 	protected function compareMinify(array $tests, array $minify = []) {

@@ -105,28 +105,30 @@ class directive {
 		}
 
 		// minify properties
-		foreach ($this->properties AS $key => $item) {
-			if (!isset($item->rules) || !empty($item->rules)) {
-				$item->minify($minify);
-			} else {
-				unset($this->properties[$key]);
-			}
+		$props = $this->properties;
+		foreach ($props AS $key => $item) {
+			$item->minify($minify);
 		}
 
-		if ($this->properties && $minify['semicolons']) {
-			\end($this->properties)->semicolon = false;
+		if ($minify['semicolons'] && $props) {
+			\end($props)->semicolon = false;
 		}
 
 		// minify document
 		if ($this->document) {
 			$this->document->minify($minify);
-			if (!$this->document->rules) {
+			if ($minify['empty'] && !$this->document->rules) {
 				$this->document = null;
 			}
 		}
 	}
 
-	public function isEmpty() {
+	/**
+	 * Detects if the directive is empty
+	 *
+	 * @return bool Whether the directive is empty
+	 */
+	public function isEmpty() : bool {
 		if (in_array($this->directive, $this->root->config['nested'])) {
 			return $this->document === null;
 		} else {
