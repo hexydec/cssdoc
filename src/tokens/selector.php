@@ -21,7 +21,7 @@ class selector {
 	 * @param cssdoc $root The parent htmldoc object
 	 */
 	public function __construct(cssdoc $root) {
-		
+		$this->root = $root;
 	}
 
 	/**
@@ -58,33 +58,35 @@ class selector {
 						$brackets = false;
 						while (($token = $tokens->next()) !== null) {
 
-							// capture brackets
-							if ($brackets || $token['type'] == 'bracketopen') {
-								$brackets = true;
-								if ($token['type'] != 'whitespace') {
-									$parts .= $token['value'];
-									if ($token['type'] == 'bracketclose') {
-										break;
-									}
-								}
-
-							// capture selector
-							} elseif (!in_array($token['type'], ['whitespace', 'comma', 'curlyopen'])) {
+							// build up the selector
+							if (!in_array($token['type'], ['whitespace', 'comma', 'curlyopen', 'bracketopen'])) {
 								$parts .= $token['value'];
 
 							// stop here
 							} else {
-								$tokens->prev();
+
+								// save selector
+								$this->selectors[] = [
+									'selector' => $parts,
+									'join' => $join
+								];
+								$join = null;
+
+								// capture brackets
+								if ($token['type'] === 'bracketopen') {
+									$tokens->next();
+									$obj = new selector($this->root);
+									if ($obj->parse($tokens)) {
+										$this->selectors[] = $obj;
+									}
+
+								// don't consume the current token
+								} else {
+									$tokens->prev();
+								}
 								break;
 							}
 						}
-
-						// save selector
-						$this->selectors[] = [
-							'selector' => $parts,
-							'join' => $join
-						];
-						$join = null;
 						break;
 					case 'squareopen':
 						$parts = '';
@@ -108,6 +110,7 @@ class selector {
 					case 'curlyopen':
 					case 'curlyclose':
 						$tokens->prev();
+					case 'bracketclose':
 					case 'comma':
 						break 2;
 				}
@@ -135,14 +138,18 @@ class selector {
 		$space = $options['style'] != 'minify' ? ' ' : '';
 		$css = '';
 		foreach ($this->selectors AS $item) {
-			if ($item['join']) {
-				if ($item['join'] == ' ') {
-					$css .= $item['join'];
-				} else {
-					$css .= $space.$item['join'].$space;
+			if (is_object($item)) {
+				$css .= '('.$item->compile($options).')';
+			} else {
+				if ($item['join']) {
+					if ($item['join'] == ' ') {
+						$css .= $item['join'];
+					} else {
+						$css .= $space.$item['join'].$space;
+					}
 				}
+				$css .= $item['selector'];
 			}
-			$css .= $item['selector'];
 		}
 		return $css;
 	}
