@@ -25,7 +25,7 @@ class cssdoc {
 	   'semicolon' => ';',
 	   'directive' => '(?<!\\\\)@[a-z-]++',
 	   'important' => '!important\b',
-	   'datauri' => '(?<=url\\()data:[^)]++',
+	   'datauri' => 'data:[^\\s)]++',
 	   'string' => '(?:[^\\/\\[\\]{}\\(\\):;,\\*>+~\\^$!" \\n\\r\\t]++|\\\\.)',
 	];
 

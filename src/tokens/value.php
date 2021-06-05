@@ -182,7 +182,7 @@ class value {
 				if (($single = \mb_strpos($item, "'")) === 0 || \mb_strpos($item, '"') === 0) {
 
 					// remove quotes where possible
-					if ($minify['quotes'] && !in_array($name, $config['quoted']) && preg_match('/^("|\')([^ \'"()]++)\\1$/i', $item, $match)) {
+					if ($minify['quotes'] && !in_array($name, $config['quoted']) && preg_match('/^("|\')((?!-?\\d)[-_a-z0-9.\\/]++)\\1$/i', $item, $match)) {
 						$item = $match[2];
 
 					// or convert to double quotes

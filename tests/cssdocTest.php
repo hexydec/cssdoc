@@ -80,6 +80,12 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 					}
 				',
 				'output' => '#id{width:calc(50% + 20px);}'
+			],
+			[
+				'input' => '.media-object-section:last-child:not(:nth-child(2)) {
+						padding-left: 1rem;
+					}',
+				'output' => '.media-object-section:last-child:not(:nth-child(2)){padding-left:1rem;}'
 			]
 		];
 		$this->compareMinify($tests, $this->config);
@@ -462,7 +468,13 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 				  syntax: "<integer>";
 			  }',
 			  'output' => '@property --ms-tens{initial-value:0;inherits:false;syntax:"<integer>";}'
-			]
+		  ],
+		  [
+			  'input' => '.foundation-mq {
+ 			  		font-family: "small=0em&medium=40em&large=64em&xlarge=75em&xxlarge=90em";
+				}',
+			  'output' => '.foundation-mq{font-family:"small=0em&medium=40em&large=64em&xlarge=75em&xxlarge=90em";}'
+		  ]
 		];
 		$config = $this->config;
 		$config['quotes'] = true;
