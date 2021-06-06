@@ -86,6 +86,30 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 						padding-left: 1rem;
 					}',
 				'output' => '.media-object-section:last-child:not(:nth-child(2)){padding-left:1rem;}'
+			],
+			[
+				'input' => '.id {
+						padding-left: calc( 1rem + 5px );
+					}',
+				'output' => '.id{padding-left:calc(1rem + 5px);}'
+			],
+			[
+				'input' => '.id {
+						padding-left: calc( 1rem + ( 5% + 5px ) );
+					}',
+				'output' => '.id{padding-left:calc(1rem + (5% + 5px));}'
+			],
+			[
+				'input' => '.id {
+						padding-left: calc( -1rem + ( 5% + 5px ) );
+					}',
+				'output' => '.id{padding-left:calc(-1rem + (5% + 5px));}'
+			],
+			[
+				'input' => 'button:focus:not(:focus-visible) {
+					outline: 0;
+				}',
+				'output' => 'button:focus:not(:focus-visible){outline:0;}'
 			]
 		];
 		$this->compareMinify($tests, $this->config);
@@ -500,8 +524,30 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 					content: 'Foo';
 				}",
 				'output' => '#id::before{content:"Foo";}'
+			],
+			[
+				'input' => ".uk-list-decimal > ::before {
+						content: counter(decimal, decimal) '\\200A.\\00A0';
+					}
+					.uk-list-hyphen > ::before {
+						content: '–\\00A0\\00A0';
+					}",
+				'output' => '.uk-list-decimal>::before{content:counter(decimal,decimal) "\\200A.\\00A0";}.uk-list-hyphen>::before{content:"–\\00A0\\00A0";}'
+			],
+			[
+				'input' => "#id::before {
+					content: 'Don\\'t convert \"this\"';
+				}",
+				'output' => "#id::before{content:'Don\\'t convert \"this\"';}"
+			],
+			[
+				'input' => "#id::before {
+					content: 'Don\\'t leave this';
+				}",
+				'output' => '#id::before{content:"Don\'t leave this";}'
 			]
 		];
+
 		$config = $this->config;
 		$config['convertquotes'] = true;
 		$this->compareMinify($tests, $config);

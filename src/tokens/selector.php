@@ -59,7 +59,7 @@ class selector {
 						while (($token = $tokens->next()) !== null) {
 
 							// build up the selector
-							if (!in_array($token['type'], ['whitespace', 'comma', 'curlyopen', 'bracketopen'])) {
+							if (!\in_array($token['type'], ['whitespace', 'comma', 'curlyopen', 'bracketopen', 'bracketclose'])) {
 								$parts .= $token['value'];
 
 							// stop here

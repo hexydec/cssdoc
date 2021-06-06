@@ -70,7 +70,7 @@ class value {
 					$this->properties[] = $token['value'];
 					break;
 				case 'bracketopen':
-					$item = new value($this->root, $this->properties ? end($this->properties) : $this->name, true);
+					$item = new value($this->root, !$this->brackets && $this->properties ? end($this->properties) : $this->name, true);
 					if ($item->parse($tokens)) {
 						$this->properties[] = $item;
 					}
@@ -186,8 +186,8 @@ class value {
 						$item = $match[2];
 
 					// or convert to double quotes
-					} elseif ($minify['convertquotes'] && $single === 0) {
-						$item = '"'.\addcslashes(\stripslashes(\trim($item, "'")), "'").'"';
+					} elseif ($minify['convertquotes'] && $single === 0 && mb_strpos($item, '"') === false) {
+						$item = '"'.\str_replace("\\'", "'", \trim($item, "'")).'"';
 					}
 
 				// lowercase non quoted values
@@ -217,7 +217,7 @@ class value {
 		$last = null;
 		foreach ($this->properties AS $item) {
 			if (\is_object($item)) {
-				if ($last == 'and') {
+				if (\in_array($last, ['and', '+', '-'])) {
 					$css .= $join;
 				}
 				$css .= '('.$item->compile($options).')';

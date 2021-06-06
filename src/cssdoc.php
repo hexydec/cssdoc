@@ -35,7 +35,7 @@ class cssdoc {
 	protected $config = [
 		'nested' => ['@media', '@supports', '@keyframes', '@-webkit-keyframes', '@-moz-keyframes', '@-o-keyframes', '@document', '@-moz-document', '@container'], // directive that can have nested rules
 		'spaced' => ['calc'], // values where spaces between operators must be retained
-		'quoted' => ['content', 'format', 'counters', '@charset', 'syntax'], // directives or properties where the contained values must be quoted
+		'quoted' => ['content', 'format', 'counters', '@charset', 'syntax', 'font-feature-settings', '-webkit-font-feature-settings', '-moz-font-feature-settings', 'quotes', 'text-overflow'], // directives or properties where the contained values must be quoted
 		'casesensitive' => ['url'], // property values that should not be lowercased
 		'none' => ['border', 'background', 'outline'], // properties that can be changed to 0 when none
 		'colors' => [
