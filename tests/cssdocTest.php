@@ -4,11 +4,13 @@ use hexydec\css\cssdoc;
 final class cssdocTest extends \PHPUnit\Framework\TestCase {
 
 	protected $config = [
+		'selectors' => false, // minify selectors
 		'semicolons' => false, // remove last semi-colon in each rule
 		'zerounits' => false, // remove the unit from 0 values where possible (0px => 0)
 		'leadingzeros' => false, // remove leading 0 from fractional values (0.5 => .5)
 		'trailingzeros' => false, // remove any trailing 0's from fractional values (74.0 => 74)
 		'decimalplaces' => null, // maximum number of decimal places for a value
+		'multiples' => false, // minify multiple values (margin: 20px 10px 20px 10px => margin: 20px 10px)
 		'quotes' => false, // remove quotes where possible (background: url("test.png") => background: url(test.png))
 		'convertquotes' => false, // convert single quotes to double quotes (content: '' => content: "")
 		'colors' => false, // shorten hex values and replace with named values where shorter (color: #FF0000 => color: red)
@@ -106,6 +108,30 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 				'output' => '.id{padding-left:calc(-1rem + (5% + 5px));}'
 			],
 			[
+				'input' => '.id {
+						padding-left: calc( -1rem + ( 5% * 5 ) );
+					}',
+				'output' => '.id{padding-left:calc(-1rem + (5%*5));}'
+			],
+			[
+				'input' => '.id {
+						padding-left: calc( -1rem + ( 5% * -5 ) );
+					}',
+				'output' => '.id{padding-left:calc(-1rem + (5%*-5));}'
+			],
+			[
+				'input' => '.id {
+						padding-left: calc( -1rem + ( 5% + -5px ) );
+					}',
+				'output' => '.id{padding-left:calc(-1rem + (5% + -5px));}'
+			],
+			[
+				'input' => '.id {
+						padding-left: calc( -1rem + ( 5% - -5px ) );
+					}',
+				'output' => '.id{padding-left:calc(-1rem + (5% - -5px));}'
+			],
+			[
 				'input' => 'button:focus:not(:focus-visible) {
 					outline: 0;
 				}',
@@ -132,6 +158,50 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 			$this->assertEquals(true, file_exists($file));
 			unlink($file);
 		}
+	}
+
+	public function testCanMinifySelectors() {
+		$tests = [
+			[
+				'input' => '.id[style*="float"] {
+					outline: 0;
+				}',
+				'output' => '.id[style*=float]{outline:0;}'
+			],
+			[
+				'input' => '.id[title*="catch_this-123"] {
+					outline: 0;
+				}',
+				'output' => '.id[title*=catch_this-123]{outline:0;}'
+			],
+			[
+				'input' => '.id[title*="catch this 123"] {
+					outline: 0;
+				}',
+				'output' => '.id[title*="catch this 123"]{outline:0;}'
+			],
+			[
+				'input' => '.id[title*="--no"] {
+					outline: 0;
+				}',
+				'output' => '.id[title*="--no"]{outline:0;}'
+			],
+			[
+				'input' => '.id[title*="-0no"] {
+					outline: 0;
+				}',
+				'output' => '.id[title*="-0no"]{outline:0;}'
+			],
+			[
+				'input' => ".id::before, .id::after, ::before {
+					content: \"\";
+				}",
+				'output' => '.id:before,.id:after,:before{content:"";}'
+			]
+		];
+		$config = $this->config;
+		$config['selectors'] = true;
+		$this->compareMinify($tests, $config);
 	}
 
 	public function testCanMinifyUrls() {
@@ -387,6 +457,13 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 					transition: all 0000.5s;
 				}',
 				'output' => '#id{font-size:.9em;transition:all .5s;}'
+			],
+			[
+				'input' => '#id {
+					top: calc(-0.1% + 1em);
+					bottom: -0.5px;
+				}',
+				'output' => '#id{top:calc(-.1% + 1em);bottom:-.5px;}'
 			]
 		];
 		$config = $this->config;
@@ -545,6 +622,24 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 					content: 'Don\\'t leave this';
 				}",
 				'output' => '#id::before{content:"Don\'t leave this";}'
+			],
+			[
+				'input' => "#id[title*='hello'] {
+					font-weight: bold;
+				}",
+				'output' => '#id[title*="hello"]{font-weight:bold;}'
+			],
+			[
+				'input' => "#id[title*='Find \"hello\"'] {
+					font-weight: bold;
+				}",
+				'output' => '#id[title*="Find \\"hello\\""]{font-weight:bold;}'
+			],
+			[
+				'input' => "#id[title*='Find \"hello\" and \\'goodbye\\''] {
+					font-weight: bold;
+				}",
+				'output' => '#id[title*="Find \\"hello\\" and \'goodbye\'"]{font-weight:bold;}'
 			]
 		];
 
@@ -727,10 +822,87 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 					background: none no-repeat;
 				}",
 				'output' => '#id{border:0 none;outline:1px none;background:none no-repeat;}'
-			]
+			],
+			[
+				'input' => "#id {
+					border: transparent;
+					outline: transparent;
+					background: transparent;
+					background-color: transparent;
+				}",
+				'output' => '#id{border:0;outline:0;background:0;background-color:transparent;}'
+			],
 		];
 		$config = $this->config;
 		$config['none'] = true;
+		$this->compareMinify($tests, $config);
+	}
+
+	public function testCanShortenMultiples() {
+		$tests = [
+			[
+				'input' => "#id {
+					margin: 10px 20px 5px 20px;
+					padding: 10px 20px 5px 20px;
+					border-width: 10px 20px 5px 20px;
+					border-style: solid dashed dotted dashed;
+				}",
+				'output' => '#id{margin:10px 20px 5px;padding:10px 20px 5px;border-width:10px 20px 5px;border-style:solid dashed dotted;}'
+			],
+			[
+				'input' => "#id {
+					margin: 10px 20px 10px 20px;
+					padding: 10px 20px 10px 20px;
+					border-width: 10px 20px 10px 20px;
+					border-style: solid dashed solid dashed;
+				}",
+				'output' => '#id{margin:10px 20px;padding:10px 20px;border-width:10px 20px;border-style:solid dashed;}'
+			],
+			[
+				'input' => "#id {
+					margin: 10px 10px 10px 10px;
+					padding: 10px 10px 10px 10px;
+					border-width: 10px 10px 10px 10px;
+					border-style: solid solid solid solid;
+				}",
+				'output' => '#id{margin:10px;padding:10px;border-width:10px;border-style:solid;}'
+			],
+			[
+				'input' => "#id {
+					margin: 10px 10px 10px;
+					padding: 10px 10px 10px;
+					border-width: 10px 10px 10px;
+					border-style: solid solid solid;
+				}",
+				'output' => '#id{margin:10px;padding:10px;border-width:10px;border-style:solid;}'
+			],
+			[
+				'input' => "#id {
+					margin: 10px 10px;
+					padding: 10px 10px;
+					border-width: 10px 10px;
+					border-style: solid solid;
+				}",
+				'output' => '#id{margin:10px;padding:10px;border-width:10px;border-style:solid;}'
+			],
+			[
+				'input' => "#id {
+					margin: 10px 20px 30px 30px;
+					padding: 10px 20px 30px 30px;
+					border-width: 10px 20px 30px 30px;
+					border-style: solid dashed dotted dotted;
+				}",
+				'output' => '#id{margin:10px 20px 30px 30px;padding:10px 20px 30px 30px;border-width:10px 20px 30px 30px;border-style:solid dashed dotted dotted;}'
+			],
+			[
+				'input' => '.ui.loading.segment:after {
+						border-color: #767676 rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1);
+					}',
+				'output' => '.ui.loading.segment:after{border-color:#767676 rgba(0,0,0,0.1) rgba(0,0,0,0.1);}'
+			]
+		];
+		$config = $this->config;
+		$config['multiples'] = true;
 		$this->compareMinify($tests, $config);
 	}
 
