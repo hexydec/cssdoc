@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5d9c436a6bb13445db54a0accf546c72",
+    "content-hash": "8074a36452850e6a2eb592684248efd0",
     "packages": [
         {
             "name": "hexydec/tokenise",
-            "version": "0.4.0",
+            "version": "0.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hexydec/tokenise.git",
-                "reference": "fb449b74e11b9cb15d4977f43dbb941d6a2fe300"
+                "reference": "267d5662a728d6219eb9ee57f503e93cf6503f41"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hexydec/tokenise/zipball/fb449b74e11b9cb15d4977f43dbb941d6a2fe300",
-                "reference": "fb449b74e11b9cb15d4977f43dbb941d6a2fe300",
+                "url": "https://api.github.com/repos/hexydec/tokenise/zipball/267d5662a728d6219eb9ee57f503e93cf6503f41",
+                "reference": "267d5662a728d6219eb9ee57f503e93cf6503f41",
                 "shasum": ""
             },
             "require": {
@@ -46,9 +46,9 @@
             "description": "A program for performing lexical analysis, written in PHP",
             "support": {
                 "issues": "https://github.com/hexydec/tokenise/issues",
-                "source": "https://github.com/hexydec/tokenise/tree/0.4.0"
+                "source": "https://github.com/hexydec/tokenise/tree/0.4.1"
             },
-            "time": "2021-05-22T16:48:33+00:00"
+            "time": "2021-06-10T22:19:25+00:00"
         }
     ],
     "packages-dev": [
