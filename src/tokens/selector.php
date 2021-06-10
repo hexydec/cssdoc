@@ -59,7 +59,7 @@ class selector {
 						while (($token = $tokens->next()) !== null) {
 
 							// build up the selector
-							if (!in_array($token['type'], ['whitespace', 'comma', 'curlyopen', 'bracketopen'])) {
+							if (!\in_array($token['type'], ['whitespace', 'comma', 'curlyopen', 'bracketopen', 'bracketclose'])) {
 								$parts .= $token['value'];
 
 							// stop here
@@ -126,6 +126,35 @@ class selector {
 	 * @return void
 	 */
 	public function minify(array $minify) : void {
+		foreach ($this->selectors AS &$item) {
+
+			// minify sub-selector
+			if (is_object($item)) {
+				$item->minify($minify);
+
+			// change double colon to single colon
+			} elseif ($minify['selectors'] && (\strpos($item['selector'], '::before') === 0 || \strpos($item['selector'], '::after') === 0)) {
+				$item['selector'] = substr($item['selector'], 1);
+
+			// quoted attributes
+			} elseif (\strpbrk($item['selector'], '\'"') !== false && \preg_match('/^((?U).*)([\'"])((?:\\\\.|[^\\2])*)(\\2)(.*)$/i', $item['selector'], $match)) {
+
+				// remove quotes from strings where possible (must only contain alphanumeric, underscore and dash, not start with a digit, double dash, or dash then digit)
+				if ($minify['selectors'] && \preg_match('/^-?[a-z_][a-z0-9_-]*+$/i', $match[3])) {
+					$match[2] = $match[4] = '';
+
+				// convert quotes
+				} elseif ($minify['convertquotes'] && $match[2] === "'") {
+					$match[2] = $match[4] = '"';
+					$match[3] = str_replace(["\\'", '"'], ["'", '\\"'], $match[3]);
+				}
+
+				// recompile
+				unset($match[0]);
+				$item['selector'] = implode('', $match);
+			}
+		}
+		unset($item);
 	}
 
 	/**

@@ -97,9 +97,13 @@ class property {
 	 * @return void
 	 */
 	public function minify(array $minify) : void {
+
+		// lowercase the property name
 		if ($minify['lowerproperties'] && $this->name) {
 			$this->name = \mb_strtolower($this->name);
 		}
+
+		// minify the values
 		foreach ($this->value AS $item) {
 			$item->minify($minify);
 		}

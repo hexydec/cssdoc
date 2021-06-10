@@ -12,7 +12,7 @@ class cssdoc {
 	   'whitespace' => '\s++',
 	   'comment' => '\\/\\*[\d\D]*?\\*\\/',
 	   'quotes' => '(?<!\\\\)(?:"(?:[^"\\\\]++|\\\\.)*+"|\'(?:[^\'\\\\]++|\\\\.)*+\')',
-	   'comparison' => '[\^*$<>]?=', // comparison operators for media queries or attribute selectors
+	   'comparison' => '[\\^*$<>]?=', // comparison operators for media queries or attribute selectors
 	   'join' => '[>+~*\\/]|-(?!-)',
 	   'curlyopen' => '{',
 	   'curlyclose' => '}',
@@ -26,7 +26,7 @@ class cssdoc {
 	   'directive' => '(?<!\\\\)@[a-z-]++',
 	   'important' => '!important\b',
 	   'datauri' => 'data:[^\\s)]++',
-	   'string' => '(?:[^\\/\\[\\]{}\\(\\):;,\\*>+~\\^$!" \\n\\r\\t]++|\\\\.)',
+	   'string' => '(?:[^\\/\\[\\]{}\\(\\):;,\\*>+~\\^$!"\' \\n\\r\\t]++|\\\\.)',
 	];
 
 	/**
@@ -35,9 +35,10 @@ class cssdoc {
 	protected $config = [
 		'nested' => ['@media', '@supports', '@keyframes', '@-webkit-keyframes', '@-moz-keyframes', '@-o-keyframes', '@document', '@-moz-document', '@container'], // directive that can have nested rules
 		'spaced' => ['calc'], // values where spaces between operators must be retained
-		'quoted' => ['content', 'format', 'counters', '@charset', 'syntax'], // directives or properties where the contained values must be quoted
+		'quoted' => ['content', 'format', 'counters', '@charset', 'syntax', 'font-feature-settings', '-webkit-font-feature-settings', '-moz-font-feature-settings', 'quotes', 'text-overflow'], // directives or properties where the contained values must be quoted
 		'casesensitive' => ['url'], // property values that should not be lowercased
 		'none' => ['border', 'background', 'outline'], // properties that can be changed to 0 when none
+		'multiples' => ['margin', 'padding', 'border-width', 'border-style', 'border-color', 'border-radius'],
 		'colors' => [
 			'#f0ffff' => 'azure',
 			'#f5f5dc' => 'beige',
@@ -67,14 +68,17 @@ class cssdoc {
 			'#008080' => 'teal',
 			'#ff6347' => 'tomato',
 			'#ee82ee' => 'violet',
-			'#f5deb3' => 'wheat'
+			'#f5deb3' => 'wheat',
+			'black' => '#000'
 		],
 		'minify' => [
+			'selectors' => true, // minify selectors where possible
 			'semicolons' => true, // remove last semi-colon in each rule
 			'zerounits' => true, // remove the unit from 0 values where possible (0px => 0)
 			'leadingzeros' => true, // remove leading 0 from fractional values (0.5 => .5)
 			'trailingzeros' => true, // remove any trailing 0's from fractional values (74.0 => 74)
 			'decimalplaces' => 4, // maximum number of decimal places for a value
+			'multiples' => true, // minify multiple values (margin: 20px 10px 20px 10px => margin: 20px 10px)
 			'quotes' => true, // remove quotes where possible (background: url("test.png") => background: url(test.png))
 			'convertquotes' => true, // convert single quotes to double quotes (content: '' => content: "")
 			'colors' => true, // shorten hex values and replace with named values where shorter (color: #FF0000 => color: red)
@@ -182,9 +186,11 @@ class cssdoc {
 
 		// tokenise the input CSS
 		$tokens = new tokenise(self::$tokens, $css);
+		// $time = microtime(true);
 		// while (($token = $tokens->next()) !== null) {
-		// 	var_dump($token);
+		// 	$output[] = $token;
 		// }
+		// var_dump(number_format(microtime(true) - $time, 4), $output);
 		// exit();
 		if (!$this->parse($tokens)) {
 			$error = 'Input is not invalid';
