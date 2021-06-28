@@ -118,9 +118,9 @@ class cssdoc {
 	 * @return mixed The number of children in the object for length, the output config, or null if the parameter doesn't exist
 	 */
 	public function __get(string $var) {
-		if ($var == 'length') {
+		if ($var === 'length') {
 			return \count($this->children);
-		} elseif ($var == 'config') {
+		} elseif ($var === 'config') {
 			return $this->config;
 		}
 		return null;

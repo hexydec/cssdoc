@@ -54,7 +54,7 @@ class property {
 		if (($token = $tokens->current()) !== null) {
 			$dash = '';
 			do {
-				if ($token['value'] == '-') {
+				if ($token['value'] === '-') {
 					$dash = '-';
 				} elseif ($token['type'] === 'string') {
 					$prop = $dash.$token['value'];
@@ -116,7 +116,7 @@ class property {
 	 * @return void
 	 */
 	public function compile(array $options) : string {
-		$b = $options['style'] != 'minify';
+		$b = $options['style'] !== 'minify';
 		$css = $options['prefix'].$this->name.':'.($b ? ' ' : '');
 		$join = '';
 		foreach ($this->value AS $item) {

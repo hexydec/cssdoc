@@ -55,7 +55,7 @@ class value {
 				case 'join':
 					$value = [];
 					do {
-						if (\in_array($token['type'], ['string', 'join', 'datauri'])) {
+						if (\in_array($token['type'], ['string', 'join', 'datauri'], true)) {
 							$value[] = $token['value'];
 						} else {
 							$tokens->prev();
@@ -163,7 +163,7 @@ class value {
 						$match[6] = 's';
 
 					// remove unit on 0 values, not inside brackets where they must remain
-					} elseif ($minify['zerounits'] && $match[2] === '0' && !$match[3] && !$match[4] && !\in_array($unit, ['s', 'ms']) && !$this->brackets) {
+					} elseif ($minify['zerounits'] && $match[2] === '0' && !$match[3] && !$match[4] && !\in_array($unit, ['s', 'ms'], true) && !$this->brackets) {
 						$match[6] = '';
 					}
 
@@ -182,7 +182,7 @@ class value {
 				if (($single = \mb_strpos($item, "'")) === 0 || \mb_strpos($item, '"') === 0) {
 
 					// remove quotes where possible
-					if ($minify['quotes'] && !in_array($name, $config['quoted']) && preg_match('/^("|\')((?!-?\\d)[-_a-z0-9.\\/]++)\\1$/i', $item, $match)) {
+					if ($minify['quotes'] && !in_array($name, $config['quoted'], true) && preg_match('/^("|\')((?!-?\\d)[-_a-z0-9.\\/]++)\\1$/i', $item, $match)) {
 						$item = $match[2];
 
 					// or convert to double quotes
@@ -191,7 +191,7 @@ class value {
 					}
 
 				// lowercase non quoted values
-				} elseif ($minify['lowervalues'] && !\in_array($name, $config['casesensitive'])) {
+				} elseif ($minify['lowervalues'] && !\in_array($name, $config['casesensitive'], true)) {
 					$item = \mb_strtolower($item);
 				}
 			}
@@ -199,12 +199,12 @@ class value {
 		unset($item);
 
 		// shorten none to 0
-		if ($minify['none'] && \in_array($name, $config['none']) && !isset($this->properties[1]) && \in_array($this->properties[0], ['none', 'transparent'])) {
+		if ($minify['none'] && \in_array($name, $config['none']) && !isset($this->properties[1]) && \in_array($this->properties[0], ['none', 'transparent'], true)) {
 			$this->properties[0] = '0';
 		}
 
 		// minify multiple values
-		if ($minify['multiples'] && \in_array($name, $config['multiples'])) {
+		if ($minify['multiples'] && \in_array($name, $config['multiples'], true)) {
 
 			// compile properties
 			$props = [];
@@ -241,21 +241,21 @@ class value {
 	 * @return void
 	 */
 	public function compile(array $options) : string {
-		$b = $options['style'] != 'minify';
+		$b = $options['style'] !== 'minify';
 		$css = $options['prefix'];
 		$join = '';
 		$last = null;
 		foreach ($this->properties AS $item) {
 			if (\is_object($item)) {
-				if (\in_array($last, ['and', '+', '-'])) {
+				if (\in_array($last, ['and', '+', '-'], true)) {
 					$css .= $join;
 				}
 				$css .= '('.$item->compile($options).')';
 				$join = ' ';
-			} elseif (\in_array($item, ['-', '+']) && !\in_array(mb_strtolower($this->name), $this->root->config['spaced'])) {
+			} elseif (\in_array($item, ['-', '+'], true) && !\in_array(mb_strtolower($this->name), $this->root->config['spaced'], true)) {
 				$css .= $item;
 				$join = '';
-			} elseif (\in_array($item, [':', ',', '*', '/'])) {
+			} elseif (\in_array($item, [':', ',', '*', '/'], true)) {
 				$css .= $item;
 				$join = '';
 			} else {

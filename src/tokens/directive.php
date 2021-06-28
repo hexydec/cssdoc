@@ -50,6 +50,7 @@ class directive {
 		if (($token = $tokens->current()) !== null) {
 			$directive = true;
 			$properties = false;
+			$root = $this->root;
 			do {
 				switch ($token['type']) {
 					case 'directive':
@@ -59,7 +60,7 @@ class directive {
 					case 'colon':
 					case 'bracketopen':
 						if ($properties) {
-							$item = new property($this->root);
+							$item = new property($root);
 							if ($item->parse($tokens)) {
 								$this->properties[] = $item;
 							}
@@ -67,14 +68,14 @@ class directive {
 						}
 					case 'quotes':
 						$tokens->prev();
-						$item = new value($this->root, $this->directive);
+						$item = new value($root, $this->directive);
 						if ($item->parse($tokens)) {
 							$this->content[] = $item;
 						}
 						break;
 					case 'curlyopen':
-						if (in_array($this->directive, $this->root->config['nested'])) {
-							$item = new document($this->root);
+						if (\in_array($this->directive, $root->config['nested'], true)) {
+							$item = new document($root);
 							if ($item->parse($tokens)) {
 								$this->document = $item;
 							}
@@ -129,7 +130,7 @@ class directive {
 	 * @return bool Whether the directive is empty
 	 */
 	public function isEmpty() : bool {
-		if (in_array($this->directive, $this->root->config['nested'])) {
+		if (\in_array($this->directive, $this->root->config['nested'], true)) {
 			return $this->document === null;
 		} else {
 			return !$this->properties && !$this->content;
@@ -143,7 +144,7 @@ class directive {
 	 * @return void
 	 */
 	public function compile(array $options) : string {
-		$b = $options['style'] != 'minify';
+		$b = $options['style'] !== 'minify';
 		$css = $this->directive;
 		$join = ' ';
 

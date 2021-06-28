@@ -42,7 +42,7 @@ class selector {
 						}
 						break;
 					case 'join':
-						if ($token['value'] != '*') {
+						if ($token['value'] !== '*') {
 							$join = $token['value'];
 							break;
 						}
@@ -59,7 +59,7 @@ class selector {
 						while (($token = $tokens->next()) !== null) {
 
 							// build up the selector
-							if (!\in_array($token['type'], ['whitespace', 'comma', 'curlyopen', 'bracketopen', 'bracketclose'])) {
+							if (!\in_array($token['type'], ['whitespace', 'comma', 'curlyopen', 'bracketopen', 'bracketclose'], true)) {
 								$parts .= $token['value'];
 
 							// stop here
@@ -91,8 +91,8 @@ class selector {
 					case 'squareopen':
 						$parts = '';
 						while (($token = $tokens->next()) !== null) {
-							if ($token['type'] != 'whitespace') {
-								if ($token['type'] != 'squareclose') {
+							if ($token['type'] !== 'whitespace') {
+								if ($token['type'] !== 'squareclose') {
 									$parts .= $token['value'];
 								} else {
 									$tokens->prev();
@@ -164,14 +164,14 @@ class selector {
 	 * @return void
 	 */
 	public function compile(array $options) : string {
-		$space = $options['style'] != 'minify' ? ' ' : '';
+		$space = $options['style'] !== 'minify' ? ' ' : '';
 		$css = '';
 		foreach ($this->selectors AS $item) {
 			if (is_object($item)) {
 				$css .= '('.$item->compile($options).')';
 			} else {
 				if ($item['join']) {
-					if ($item['join'] == ' ') {
+					if ($item['join'] === ' ') {
 						$css .= $item['join'];
 					} else {
 						$css .= $space.$item['join'].$space;

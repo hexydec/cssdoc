@@ -82,7 +82,7 @@ class document {
 	 * @return void
 	 */
 	public function compile(array $options) : string {
-		$b = $options['style'] != 'minify';
+		$b = $options['style'] !== 'minify';
 		$css = '';
 
 		// compile selectors
