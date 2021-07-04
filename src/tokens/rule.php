@@ -131,4 +131,25 @@ class rule {
 		$css .= $b ? "\n".$options['prefix'].'}' : '}';
 		return $css;
 	}
+
+	public function matches(?array $selectors, array $hasProp = [], bool $exact = true) {
+		$matches = false;
+
+		// match selectors
+		foreach ($selectors AS $item) {
+			if (\in_array($item, $this->selectors)) {
+				$matches = true;
+				break;
+			}
+		}
+
+		// check props
+		if ($matches && $hasProp) {
+			foreach ($this->properties AS $item) {
+				// if () {
+				//
+				// }
+			}
+		}
+	}
 }

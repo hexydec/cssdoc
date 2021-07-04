@@ -271,4 +271,27 @@ class cssdoc {
 		}
 		return false;
 	}
+
+	/**
+	 * Find rules in the document that match the specified criteria
+	 *
+	 * @param string $selector A string specifying the selectors to match, comma separate multiple selectors
+	 * @param array|string $hasProp A string or array specifying the properties that any rules must contain
+	 * @param array $media An array specifying how any media queries should be match, where the key is the property and the key the value. 'max-width' will match any rules where the value is lower that that specified, 'min-width' the value must be higher. Use 'media' to specify the media type
+	 * @param bool $exact Denotes whether to match selectors exactly, if false, selectors will be matched from the left
+	 * @return cssdoc A CSSdoc object
+	 */
+	public function find(?string $selector, $hasProp = null, array $media = [], bool $exact = true) {
+
+		// normalise selectors
+		$selector = $selector === null ? null : explode(',', $selector);
+		if (!\is_array($hasProp)) {
+			$hasProp = [$hasProp];
+		}
+		$found = $this->document->find($selector, $hasProp, $media);
+	}
+
+	// public function prop(string $prop, ?string $func = null) {
+	//
+	// }
 }
