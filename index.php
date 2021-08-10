@@ -94,6 +94,7 @@ if (!empty($_POST['action'])) {
 <html>
 	<head>
 		<title>Hexydec CSS Minifier</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1.0" />
 		<style>
 			html, body {
 				margin: 0;
@@ -148,10 +149,11 @@ if (!empty($_POST['action'])) {
 				flex: 1 1 40%;
 			}
 			.minify__options {
-				flex: 0 0 150px;
+				flex: 0 0 auto;
 				padding: 10px;
 				background: #003ea4;
 				color: #FFF;
+				overflow: auto;
 			}
 			.minify__options-list {
 				list-style: none;

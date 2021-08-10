@@ -132,24 +132,36 @@ class rule {
 		return $css;
 	}
 
-	public function matches(?array $selectors, array $hasProp = [], bool $exact = true) {
+	public function matches(?array $selectors, array $hasProp = [], bool $exact = true) : bool {
 		$matches = false;
 
 		// match selectors
-		foreach ($selectors AS $item) {
-			if (\in_array($item, $this->selectors)) {
-				$matches = true;
-				break;
+		foreach ($this->selectors AS $selector) {
+			$compiled = $selector->compile();
+			if ($exact) {
+				if (\in_array($compiled, $selector)) {
+					$matches = true;
+					break;
+				}
+			} else {
+				foreach ($selectors AS $item) {
+					if (\mb_stripos($compiled, $item)) {
+						$matches = true;
+						break;
+					}
+				}
 			}
 		}
 
 		// check props
 		if ($matches && $hasProp) {
 			foreach ($this->properties AS $item) {
-				// if () {
-				//
-				// }
+				if (!\in_array($item->name, $hasProp)) {
+					$matches = false;
+					break;
+				}
 			}
 		}
+		return $matches;
 	}
 }

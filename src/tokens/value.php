@@ -224,10 +224,18 @@ class value {
 
 			// delete properties where they are the same
 			for ($i = 3; $i > 0; $i--) {
-				$compare = $i - 2;
-				if (isset($props[$i]) && $props[$i]['value'] === $props[$compare < 0 ? 0 : $compare]['value']) {
-					foreach ($props[$i]['keys'] AS $item) {
-						unset($this->properties[$item]);
+
+				// if the property exists
+				if (isset($props[$i])) {
+
+					// compare two behind unless it becomes less than 0, then compare the 0 key
+					$compare = $i - 2;
+					if ($props[$i]['value'] === $props[$compare < 0 ? 0 : $compare]['value']) {
+						foreach ($props[$i]['keys'] AS $item) {
+							unset($this->properties[$item]);
+						}
+					} else {
+						break;
 					}
 				}
 			}

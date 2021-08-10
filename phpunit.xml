@@ -17,5 +17,8 @@
 		<testsuite name="CSSdoc">
 			<file>tests/cssdocTest.php</file>
 		</testsuite>
+		<!--<testsuite name="FindCSSdoc">
+			<file>tests/findcssdocTest.php</file>
+		</testsuite>-->
 	</testsuites>
 </phpunit>

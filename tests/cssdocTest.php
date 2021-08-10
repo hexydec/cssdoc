@@ -895,6 +895,22 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 				'output' => '#id{margin:10px 20px 30px 30px;padding:10px 20px 30px 30px;border-width:10px 20px 30px 30px;border-style:solid dashed dotted dotted;}'
 			],
 			[
+				'input' => "#id {
+					margin: 0 20px 0 0;
+					padding: 10px 0 0 0;
+					border-width: 0 0 30px 0;
+				}",
+				'output' => '#id{margin:0 20px 0 0;padding:10px 0 0;border-width:0 0 30px;}'
+			],
+			[
+				'input' => "#id {
+					margin: 0 calc(2em + 20px) 0 calc(2em + 20px);
+					padding: calc(2em + 20px) 0 calc(2em + 20px) 0;
+					border-width: calc(2em + 20px) calc(2em + 20px) calc(2em + 20px) calc(2em + 20px);
+				}",
+				'output' => '#id{margin:0 calc(2em + 20px);padding:calc(2em + 20px) 0;border-width:calc(2em + 20px);}'
+			],
+			[
 				'input' => '.ui.loading.segment:after {
 						border-color: #767676 rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1);
 					}',

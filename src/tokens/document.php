@@ -20,8 +20,9 @@ class document {
 	 *
 	 * @param cssdoc $root The parent htmldoc object
 	 */
-	public function __construct(cssdoc $root) {
+	public function __construct(cssdoc $root, array $rules = []) {
 		$this->root = $root;
+		$this->rules = [];
 	}
 
 	/**
