@@ -183,7 +183,7 @@ class cssdoc implements \ArrayAccess, \Iterator {
 	/**
 	 * Retrieve the document node in the current position
 	 *
-	 * @return direct|rule The child node at the current pointer position
+	 * @return document|rule The child node at the current pointer position
 	 */
 	public function current() {
 		return $this->document->rules[$this->pointer] ?? null;
@@ -229,14 +229,18 @@ class cssdoc implements \ArrayAccess, \Iterator {
 	 * Open an HTML file from a URL
 	 *
 	 * @param string $url The address of the HTML file to retrieve
-	 * @param mixed $context A resource object made with stream_context_create()
+	 * @param resource $context A resource object made with stream_context_create()
 	 * @param string &$error A reference to any user error that is generated
 	 * @return mixed The loaded HTML, or false on error
 	 */
 	public function open(string $url, mixed $context = null, string &$error = null) {
 
+		// check resource
+		if ($context !== null && !\is_resource($context)) {
+			$error = 'The supplied context is not a valid resource';
+
 		// open a handle to the stream
-		if (($handle = \fopen($url, 'rb', false, $context)) === false) {
+		} elseif (($handle = @\fopen($url, 'rb', false, $context)) === false) {
 			$error = 'Could not open file "'.$url.'"';
 
 		// retrieve the stream contents
