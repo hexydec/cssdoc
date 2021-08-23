@@ -61,7 +61,7 @@ class value {
 							$tokens->prev();
 							break;
 						}
-					} while (($token = $tokens->next()) !== false);
+					} while (($token = $tokens->next()) !== null);
 					$this->properties[] = \implode('', $value);
 					break;
 				case 'colon':
