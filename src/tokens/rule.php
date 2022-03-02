@@ -96,6 +96,8 @@ class rule {
 		foreach ($this->properties AS $item) {
 			$item->minify($minify);
 		}
+
+		// remove last semi-colon
 		if ($this->properties && $minify['semicolons']) {
 			\end($this->properties)->semicolon = false;
 		}

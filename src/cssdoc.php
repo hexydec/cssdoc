@@ -281,7 +281,7 @@ class cssdoc implements \ArrayAccess, \Iterator {
 	 * @param string|integer $i The key to be accessed, can be a string or integer
 	 * @return mixed The requested value or null if the key doesn't exist
 	 */
-	public function offsetGet($i) { // return reference so you can set it like an array
+	public function offsetGet(mixed $i) : mixed { // return reference so you can set it like an array
 		return $this->document->rules[$i] ?? null;
 	}
 
@@ -290,7 +290,7 @@ class cssdoc implements \ArrayAccess, \Iterator {
 	 *
 	 * @return document|rule The child node at the current pointer position
 	 */
-	public function current() {
+	public function current() : mixed {
 		return $this->document->rules[$this->pointer] ?? null;
 	}
 
