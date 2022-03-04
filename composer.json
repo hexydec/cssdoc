@@ -10,9 +10,9 @@
 			"homepage": "https://github.com/hexydec/cssdoc"
         }
     ],
-    "minimum-stability": "beta",
+    "minimum-stability": "stable",
     "require": {
-        "php": ">=7.3",
+        "php": ">=7.4",
 		"hexydec/tokenise": "0.4.2"
 	},
 	"autoload": {
