@@ -7,8 +7,6 @@ A tokeniser based CSS document parser and minifier, written in PHP.
 [![Tests Status](https://github.com/hexydec/cssdoc/actions/workflows/tests.yml/badge.svg)](https://github.com/hexydec/cssdoc/actions/workflows/tests.yml)
 [![Code Coverage](https://codecov.io/gh/hexydec/cssdoc/branch/master/graph/badge.svg)](https://app.codecov.io/gh/hexydec/cssdoc)
 
-**This project is currently in beta, so you should test your implementation thoroughly before deployment**
-
 ## Description
 
 A CSS parser, primarily designed for minifying CSS documents.
