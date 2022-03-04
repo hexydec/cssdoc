@@ -4,24 +4,24 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6f8706b359cd580a3bc3f960c7752813",
+    "content-hash": "88d589363d4a2e3cb73830d71293994b",
     "packages": [
         {
             "name": "hexydec/tokenise",
-            "version": "0.4.2",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hexydec/tokenise.git",
-                "reference": "e9da1b193ccce661090b462c073f02b7e499f141"
+                "reference": "bcb60c1efdf414d3849cad27d4ad44727660231e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hexydec/tokenise/zipball/e9da1b193ccce661090b462c073f02b7e499f141",
-                "reference": "e9da1b193ccce661090b462c073f02b7e499f141",
+                "url": "https://api.github.com/repos/hexydec/tokenise/zipball/bcb60c1efdf414d3849cad27d4ad44727660231e",
+                "reference": "bcb60c1efdf414d3849cad27d4ad44727660231e",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.3"
+                "php": ">=7.4"
             },
             "require-dev": {
                 "phpunit/phpunit": "9.5"
@@ -46,9 +46,9 @@
             "description": "A program for performing lexical analysis, written in PHP",
             "support": {
                 "issues": "https://github.com/hexydec/tokenise/issues",
-                "source": "https://github.com/hexydec/tokenise/tree/0.4.2"
+                "source": "https://github.com/hexydec/tokenise/tree/1.0.0"
             },
-            "time": "2021-08-23T19:13:34+00:00"
+            "time": "2022-03-04T22:57:24+00:00"
         }
     ],
     "packages-dev": [
@@ -2152,12 +2152,12 @@
         }
     ],
     "aliases": [],
-    "minimum-stability": "beta",
+    "minimum-stability": "stable",
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.3"
+        "php": ">=7.4"
     },
     "platform-dev": [],
     "plugin-api-version": "2.2.0"
