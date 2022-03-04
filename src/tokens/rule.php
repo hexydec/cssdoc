@@ -8,22 +8,22 @@ class rule {
 	/**
 	 * @var cssdoc The parent CSSdoc object
 	 */
-	protected $root;
+	protected cssdoc $root;
 
 	/**
 	 * @var array An array of selectors
 	 */
-	protected $selectors = [];
+	protected array $selectors = [];
 
 	/**
 	 * @var array An array of properties
 	 */
-	public $properties = [];
+	public array $properties = [];
 
 	/**
 	 * @var string A comment
 	 */
-	protected $comment = null;
+	protected ?string $comment = null;
 
 	/**
 	 * Constructs the comment object

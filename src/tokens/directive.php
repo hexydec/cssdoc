@@ -8,27 +8,27 @@ class directive {
 	/**
 	 * @var cssdoc The parent CSSdoc object
 	 */
-	protected $root;
+	protected cssdoc $root;
 
 	/**
 	 * @var string The name of the directive
 	 */
-	protected $directive;
+	protected string $directive;
 
 	/**
-	 * @var string The value of the directive
+	 * @var array The contents of the directive, split into parts
 	 */
-	public $content = [];
+	public array $content = [];
 
 	/**
 	 * @var array An array of properties
 	 */
-	public $properties = [];
+	public array $properties = [];
 
 	/**
 	 * @var document A document object
 	 */
-	public $document = null;
+	public ?document $document = null;
 
 	/**
 	 * Constructs the comment object

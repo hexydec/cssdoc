@@ -8,7 +8,7 @@ class cssdoc implements \ArrayAccess, \Iterator {
 	/**
 	 * @var array $tokens Regexp components keyed by their corresponding codename for tokenising HTML
 	 */
-	protected static $tokens = [
+	protected static array $tokens = [
 	   'whitespace' => '\s++',
 	   'comment' => '\\/\\*[\d\D]*?\\*\\/',
 	   'quotes' => '(?<!\\\\)(?:"(?:[^"\\\\]++|\\\\.)*+"|\'(?:[^\'\\\\]++|\\\\.)*+\')',
@@ -32,7 +32,7 @@ class cssdoc implements \ArrayAccess, \Iterator {
 	/**
 	 * @var array $config Object configuration array
 	 */
-	protected $config = [
+	protected array $config = [
 		'nested' => ['@media', '@supports', '@keyframes', '@-webkit-keyframes', '@-moz-keyframes', '@-o-keyframes', '@document', '@-moz-document', '@container'], // directive that can have nested rules
 		'spaced' => ['calc'], // values where spaces between operators must be retained
 		'quoted' => ['content', 'format', 'counters', '@charset', 'syntax', 'font-feature-settings', '-webkit-font-feature-settings', '-moz-font-feature-settings', 'quotes', 'text-overflow'], // directives or properties where the contained values must be quoted
@@ -203,12 +203,12 @@ class cssdoc implements \ArrayAccess, \Iterator {
 	/**
 	 * @var document $document The root document
 	 */
-	protected $document;
+	protected document $document;
 
 	/**
 	 * @var int $pointer The current pointer position for the array iterator
 	 */
-	protected $pointer = 0;
+	protected int $pointer = 0;
 
 	/**
 	 * Constructs the object
@@ -252,8 +252,11 @@ class cssdoc implements \ArrayAccess, \Iterator {
 	 * @param mixed $value The value of the array key in the children array to be updated
 	 */
 	public function offsetSet($i, $value) : void {
-		if (\is_null($i)) $this->document->rules[] = $value;
-		else $this->document->rules[$i] = $value;
+		if (\is_null($i)) {
+			$this->document->rules[] = $value;
+		} else {
+			$this->document->rules[$i] = $value;
+		}
 	}
 
 	/**

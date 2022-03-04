@@ -8,12 +8,12 @@ class document {
 	/**
 	 * @var cssdoc The parent CSSdoc object
 	 */
-	protected $root;
+	protected cssdoc $root;
 
 	/**
 	 * @var array An array of child token objects
 	 */
-	public $rules = [];
+	public array $rules = [];
 
 	/**
 	 * Constructs the comment object

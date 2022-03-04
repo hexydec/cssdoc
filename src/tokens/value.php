@@ -8,20 +8,20 @@ class value {
 	/**
 	 * @var cssdoc The parent CSSdoc object
 	 */
-	protected $root;
+	protected cssdoc $root;
 
 	/**
 	 * @var string The name of the parent property
 	 */
-	protected $name = null;
+	protected ?string $name = null;
 
 	/**
 	 * @var bool Whether the value is within brackets
 	 */
-	protected $brackets = false;
+	protected bool $brackets = false;
 
 	/**
-	 * @var value Properties
+	 * @var array Properties
 	 */
 	protected $properties = [];
 

@@ -8,12 +8,12 @@ class selector {
 	/**
 	 * @var cssdoc The parent CSSdoc object
 	 */
-	protected $root;
+	protected cssdoc $root;
 
 	/**
 	 * @var array An array of selectors
 	 */
-	protected $selectors = [];
+	protected array $selectors = [];
 
 	/**
 	 * Constructs the comment object

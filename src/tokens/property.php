@@ -8,32 +8,32 @@ class property {
 	/**
 	 * @var cssdoc The parent CSSdoc object
 	 */
-	protected $root;
+	protected cssdoc $root;
 
 	/**
 	 * @var string The name of the property
 	 */
-	protected $name;
+	protected string $name;
 
 	/**
 	 * @var array The values of the property
 	 */
-	protected $value = [];
+	protected array $value = [];
 
 	/**
 	 * @var bool Whether the property is important
 	 */
-	protected $important = false;
+	protected bool $important = false;
 
 	/**
 	 * @var bool Whether the property has a semi-colon to close it
 	 */
-	public $semicolon = false;
+	public bool $semicolon = false;
 
 	/**
 	 * @var string Any comment specified with the property
 	 */
-	protected $comment = null;
+	protected ?string $comment = null;
 
 	/**
 	 * Constructs the property object
