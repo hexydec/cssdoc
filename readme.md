@@ -27,7 +27,7 @@ if ($doc->load($css) {
 	$doc->minify();
 
 	// compile back to CSS
-	echo $doc->compiile();
+	echo $doc->compile();
 }
 ```
 
@@ -52,7 +52,7 @@ CSSdoc requires [\hexydec\token\tokenise](https://github.com/hexydec/tokenise) t
 
 ## Support
 
-CSSdoc supports PHP version 7.3+.
+CSSdoc supports PHP version 7.4+.
 
 ## Contributing
 
