@@ -456,9 +456,9 @@ class cssdoc implements \ArrayAccess, \Iterator {
 	}
 
 	/**
-	 * Compile the property to a string
+	 * Compile the document to a string
 	 *
-	 * @param array $options An array of compilation options
+	 * @param array $options An array indicating output options, this is merged with cssdoc::$output
 	 * @return void
 	 */
 	public function compile(array $options = []) : string {
@@ -467,25 +467,23 @@ class cssdoc implements \ArrayAccess, \Iterator {
 	}
 
 	/**
-	 * Compile the document as an HTML string and save it to the specified location
+	 * Compile the document and save it to the specified location
 	 *
-	 * @param array $options An array indicating output options, this is merged with htmldoc::$output
-	 * @return string The compiled HTML
+	 * @param string|null $file The file location to save the document to, or null to just return the compiled code
+	 * @param array $options An array indicating output options, this is merged with cssdoc::$output
+	 * @return string|bool The compiled CSS, or false if the file could not be saved
 	 */
 	public function save(string $file = null, array $options = []) {
 		$css = $this->compile($options);
 
-		// send back as string
-		if (!$file) {
-			return $css;
-
 		// save file
-		} elseif (\file_put_contents($file, $css) === false) {
+		if ($file && \file_put_contents($file, $css) === false) {
 			\trigger_error('File could not be written', E_USER_WARNING);
-		} else {
-			return true;
+			return false;
 		}
-		return false;
+
+		// send back as string
+		return $css;
 	}
 
 	public function collection(array $rules) {

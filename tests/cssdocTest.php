@@ -154,7 +154,7 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 			// test save method
 			$this->assertEquals($minified, $obj->save());
 			$file = __DIR__.'/test.css';
-			$this->assertEquals(true, $obj->save($file, ['style' => 'beautify']));
+			$this->assertEquals($obj->compile(['style' => 'beautify']), $obj->save($file, ['style' => 'beautify']));
 			$this->assertEquals(true, file_exists($file));
 			unlink($file);
 		}
