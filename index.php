@@ -62,8 +62,9 @@ if (!empty($_POST['action'])) {
 		// retrieve the user posted options
 		$isset = isset($_POST['minify']) && \is_array($_POST['minify']);
 		foreach ($options AS $key => $item) {
-			$minify[$key] = $isset && \in_array($key, $_POST['minify']) ? (\is_array($item) ? [] : (\is_bool($options[$key]) ? true : $options[$key])) : false;
+			$set = $isset && \in_array($key, $_POST['minify']);
 			if (\is_array($item)) {
+				$minify[$key] = [];
 				foreach ($item AS $sub => $value) {
 					if ($minify[$key] !== false && isset($_POST['minify'][$key]) && \is_array($_POST['minify'][$key]) && \in_array($sub, $_POST['minify'][$key])) {
 						$minify[$key][$sub] = true;
@@ -71,6 +72,10 @@ if (!empty($_POST['action'])) {
 						$minify[$key][$sub] = false;
 					}
 				}
+			} elseif (\is_bool($options[$key])) {
+				$minify[$key] = $set;
+			} else {
+				$minify[$key] = $set ? $item : null;
 			}
 		}
 
