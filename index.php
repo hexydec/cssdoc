@@ -72,7 +72,7 @@ if (!empty($_POST['action'])) {
 						$minify[$key][$sub] = false;
 					}
 				}
-			} elseif (\is_bool($options[$key])) {
+			} elseif (\is_bool($item)) {
 				$minify[$key] = $set;
 			} else {
 				$minify[$key] = $set ? $item : null;
