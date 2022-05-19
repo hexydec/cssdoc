@@ -464,6 +464,12 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 					bottom: -0.5px;
 				}',
 				'output' => '#id{top:calc(-.1% + 1em);bottom:-.5px;}'
+			],
+			[
+				'input' => '#id {
+					animation: 0.5s 0.3s both lines;
+				}',
+				'output' => '#id{animation:.5s .3s both lines;}'
 			]
 		];
 		$config = $this->config;
@@ -479,8 +485,9 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 					transition: all 500ms;
 					transition-delay: 3.2000s;
 					padding: 32.5000px;
+					animation-delay: .5000s;
 				}',
-				'output' => '#id{font-size:14em;transition:all 500ms;transition-delay:3.2s;padding:32.5px;}'
+				'output' => '#id{font-size:14em;transition:all 500ms;transition-delay:3.2s;padding:32.5px;animation-delay:.5s;}'
 			]
 		];
 		$config = $this->config;
@@ -496,6 +503,18 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 					width: 33.3333333333333333%;
 				}',
 				'output' => '#id{font-size:0.9838em;width:33.3333%;}'
+			],
+			[
+				'input' => '#id {
+					animation: 0.5s 0.4s both lines;
+				}',
+				'output' => '#id{animation:0.5s 0.4s both lines;}'
+			],
+			[
+				'input' => '#id {
+					animation: .5s .4s both lines;
+				}',
+				'output' => '#id{animation:.5s .4s both lines;}'
 			]
 		];
 		$config = $this->config;
@@ -748,6 +767,24 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 					transition: all 00450ms;
 				}',
 				'output' => '#id{transition:all 00.45s;}'
+			],
+			[
+				'input' => '#id {
+					animation: 0.5s 0.4s both lines;
+				}',
+				'output' => '#id{animation:0.5s 0.4s both lines;}'
+			],
+			[
+				'input' => '#id {
+					animation: .5s .4s both lines;
+				}',
+				'output' => '#id{animation:.5s .4s both lines;}'
+			],
+			[
+				'input' => '#id {
+					animation: lines .5s both;
+				}',
+				'output' => '#id{animation:lines .5s both;}'
 			]
 		];
 		$config = $this->config;
@@ -832,6 +869,12 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 				}",
 				'output' => '#id{border:0;outline:0;background:0;background-color:transparent;}'
 			],
+			[
+				'input' => '#id {
+					border: 2px solid transparent;
+				}',
+				'output' => '#id{border:2px solid transparent;}'
+			]
 		];
 		$config = $this->config;
 		$config['none'] = true;

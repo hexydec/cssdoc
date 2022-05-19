@@ -80,7 +80,7 @@ class document {
 	 * Compile the property to a string
 	 *
 	 * @param array $options An array of compilation options
-	 * @return void
+	 * @return string The compiled document
 	 */
 	public function compile(array $options) : string {
 		$b = $options['style'] !== 'minify';
@@ -102,7 +102,7 @@ class document {
 	 * @param array|string $hasProp A string or array specifying the properties that any rules must contain
 	 * @param array $media An array specifying how any media queries should be match, where the key is the property and the key the value. 'max-width' will match any rules where the value is lower that that specified, 'min-width' the value must be higher. Use 'media' to specify the media type
 	 * @param bool $exact Denotes whether to match selectors exactly, if false, selectors will be matched from the left
-	 * @return cssdoc A CSSdoc object
+	 * @return array A CSSdoc object
 	 */
 	public function find(?array $selectors, $hasProp = null, array $media = [], bool $exact = true) {
 		$rules = [];

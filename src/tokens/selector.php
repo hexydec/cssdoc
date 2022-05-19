@@ -129,12 +129,12 @@ class selector {
 		foreach ($this->selectors AS &$item) {
 
 			// minify sub-selector
-			if (is_object($item)) {
+			if (\is_object($item)) {
 				$item->minify($minify);
 
 			// change double colon to single colon
-			} elseif ($minify['selectors'] && (\strpos($item['selector'], '::before') === 0 || \strpos($item['selector'], '::after') === 0)) {
-				$item['selector'] = substr($item['selector'], 1);
+			} elseif ($minify['selectors'] && (\mb_strpos($item['selector'], '::before') === 0 || \mb_strpos($item['selector'], '::after') === 0)) {
+				$item['selector'] = mb_substr($item['selector'], 1);
 
 			// quoted attributes
 			} elseif (\strpbrk($item['selector'], '\'"') !== false && \preg_match('/^((?U).*)([\'"])((?:\\\\.|[^\\2])*)(\\2)(.*)$/i', $item['selector'], $match)) {
@@ -146,12 +146,12 @@ class selector {
 				// convert quotes
 				} elseif ($minify['convertquotes'] && $match[2] === "'") {
 					$match[2] = $match[4] = '"';
-					$match[3] = str_replace(["\\'", '"'], ["'", '\\"'], $match[3]);
+					$match[3] = \str_replace(["\\'", '"'], ["'", '\\"'], $match[3]);
 				}
 
 				// recompile
 				unset($match[0]);
-				$item['selector'] = implode('', $match);
+				$item['selector'] = \implode('', $match);
 			}
 		}
 		unset($item);
@@ -167,7 +167,7 @@ class selector {
 		$space = $options['style'] !== 'minify' ? ' ' : '';
 		$css = '';
 		foreach ($this->selectors AS $item) {
-			if (is_object($item)) {
+			if (\is_object($item)) {
 				$css .= '('.$item->compile($options).')';
 			} else {
 				if ($item['join']) {

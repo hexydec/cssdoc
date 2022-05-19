@@ -147,7 +147,7 @@ class rule {
 				}
 			} else {
 				foreach ($selectors AS $item) {
-					if (\mb_stripos($compiled, $item)) {
+					if (\mb_stripos($compiled, $item) !== false) {
 						$matches = true;
 						break;
 					}

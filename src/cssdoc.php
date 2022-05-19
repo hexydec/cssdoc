@@ -227,6 +227,7 @@ class cssdoc implements \ArrayAccess, \Iterator {
 	 * @param string $var The name of the property to retrieve, currently 'length' and output
 	 * @return mixed The number of children in the object for length, the output config, or null if the parameter doesn't exist
 	 */
+	#[\ReturnTypeWillChange]
 	public function __get(string $var) {
 		if ($var === 'length') {
 			return \count($this->children);
@@ -284,7 +285,8 @@ class cssdoc implements \ArrayAccess, \Iterator {
 	 * @param string|integer $i The key to be accessed, can be a string or integer
 	 * @return mixed The requested value or null if the key doesn't exist
 	 */
-	public function offsetGet($i) : mixed { // return reference so you can set it like an array
+	#[\ReturnTypeWillChange]
+	public function offsetGet($i) { // return reference so you can set it like an array
 		return $this->document->rules[$i] ?? null;
 	}
 
@@ -293,7 +295,8 @@ class cssdoc implements \ArrayAccess, \Iterator {
 	 *
 	 * @return document|rule The child node at the current pointer position
 	 */
-	public function current() : mixed {
+	#[\ReturnTypeWillChange]
+	public function current() {
 		return $this->document->rules[$this->pointer] ?? null;
 	}
 
@@ -459,7 +462,7 @@ class cssdoc implements \ArrayAccess, \Iterator {
 	 * Compile the document to a string
 	 *
 	 * @param array $options An array indicating output options, this is merged with cssdoc::$output
-	 * @return void
+	 * @return string The document as a string
 	 */
 	public function compile(array $options = []) : string {
 		$options = \array_merge($this->config['output'], $options);
@@ -471,7 +474,7 @@ class cssdoc implements \ArrayAccess, \Iterator {
 	 *
 	 * @param string|null $file The file location to save the document to, or null to just return the compiled code
 	 * @param array $options An array indicating output options, this is merged with cssdoc::$output
-	 * @return string|bool The compiled CSS, or false if the file could not be saved
+	 * @return string|false The compiled CSS, or false if the file could not be saved
 	 */
 	public function save(string $file = null, array $options = []) {
 		$css = $this->compile($options);

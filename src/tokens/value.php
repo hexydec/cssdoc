@@ -47,7 +47,6 @@ class value {
 	 * @return bool Whether anything was parsed
 	 */
 	public function parse(tokenise $tokens) : bool {
-		$comment = null;
 		while (($token = $tokens->next()) !== null) {
 			switch ($token['type']) {
 				case 'string':
@@ -105,7 +104,7 @@ class value {
 		foreach ($this->properties AS &$item) {
 
 			// value in brackets
-			if (is_object($item)) {
+			if (\is_object($item)) {
 				$item->minify($minify);
 			} else {
 
@@ -155,11 +154,11 @@ class value {
 					$unit = \strtolower($match[6]);
 
 					// shorten time values
-					if ($minify['time'] && $unit === 'ms' && ($len = \strlen($match[3])) >= 3 && $match[3][$len-1] === '0') {
-						if (($match[4] = rtrim(\substr($match[3], -3), '0')) !== '') {
+					if ($minify['time'] && $unit === 'ms' && ($len = \mb_strlen($match[3])) >= 3 && $match[3][$len-1] === '0') {
+						if (($match[4] = \rtrim(\mb_substr($match[3], -3), '0')) !== '') {
 							$match[4] = '.'.$match[4];
 						}
-						$match[3] = $len > 3 ? \substr($match[3], 0, -3) : '';
+						$match[3] = $len > 3 ? \mb_substr($match[3], 0, -3) : '';
 						$match[6] = 's';
 
 					// remove unit on 0 values, not inside brackets where they must remain
@@ -168,25 +167,25 @@ class value {
 					}
 
 					// reduce decimal places
-					if ($minify['decimalplaces'] !== null && \strlen($match[4]) > $minify['decimalplaces']) {
-						$match[4] = $minify['decimalplaces'] ? \substr($match[4], 0, $minify['decimalplaces'] + 1) : '';
+					if (!\in_array($minify['decimalplaces'], [null, false], true) && \mb_strlen($match[4]) > $minify['decimalplaces']) {
+						$match[4] = $minify['decimalplaces'] ? \mb_substr($match[4], 0, $minify['decimalplaces'] + 1) : '';
 						$match[5] = '';
 					}
 
 					// rebuild value
 					unset($match[0]);
-					$item = implode('', $match);
+					$item = \implode('', $match);
 				}
 
 				// quoted values
 				if (($single = \mb_strpos($item, "'")) === 0 || \mb_strpos($item, '"') === 0) {
 
 					// remove quotes where possible
-					if ($minify['quotes'] && !in_array($name, $config['quoted'], true) && preg_match('/^("|\')((?!-?\\d)[-_a-z0-9.\\/]++)\\1$/i', $item, $match)) {
+					if ($minify['quotes'] && !\in_array($name, $config['quoted'], true) && \preg_match('/^("|\')((?!-?\\d)[-_a-z0-9.\\/]++)\\1$/i', $item, $match)) {
 						$item = $match[2];
 
 					// or convert to double quotes
-					} elseif ($minify['convertquotes'] && $single === 0 && mb_strpos($item, '"') === false) {
+					} elseif ($minify['convertquotes'] && $single === 0 && \mb_strpos($item, '"') === false) {
 						$item = '"'.\str_replace("\\'", "'", \trim($item, "'")).'"';
 					}
 
@@ -211,7 +210,7 @@ class value {
 			$i = 0;
 			$options = ['style' => 'minify', 'prefix' => ''];
 			foreach ($this->properties AS $key => $item) {
-				if (is_object($item)) {
+				if (\is_object($item)) {
 					$props[$i-1]['value'] .= '('.$item->compile($options).')';
 					$props[$i-1]['keys'][] = $key;
 				} else {
@@ -260,7 +259,7 @@ class value {
 				}
 				$css .= '('.$item->compile($options).')';
 				$join = ' ';
-			} elseif (\in_array($item, ['-', '+'], true) && !\in_array(mb_strtolower($this->name), $this->root->config['spaced'], true)) {
+			} elseif (\in_array($item, ['-', '+'], true) && !\in_array(\mb_strtolower($this->name), $this->root->config['spaced'], true)) {
 				$css .= $item;
 				$join = '';
 			} elseif (\in_array($item, [':', ',', '*', '/'], true)) {
