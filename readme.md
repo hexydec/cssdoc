@@ -3,7 +3,7 @@
 A tokeniser based CSS document parser and minifier, written in PHP.
 
 ![Licence](https://img.shields.io/badge/Licence-MIT-lightgrey.svg)
-![Status: Beta](https://img.shields.io/badge/Status-Beta-Yellow.svg)
+![Status: Stable](https://img.shields.io/badge/Status-Stable-Green.svg)
 [![Tests Status](https://github.com/hexydec/cssdoc/actions/workflows/tests.yml/badge.svg)](https://github.com/hexydec/cssdoc/actions/workflows/tests.yml)
 [![Code Coverage](https://codecov.io/gh/hexydec/cssdoc/branch/master/graph/badge.svg)](https://app.codecov.io/gh/hexydec/cssdoc)
 
