@@ -28,7 +28,6 @@ class selector {
 	 * Parses CSS tokens
 	 *
 	 * @param tokenise &$tokens A tokenise object
-	 * @param array $config An array of configuration options
 	 * @return bool Whether anything was parsed
 	 */
 	public function parse(tokenise $tokens) : bool {
@@ -161,7 +160,7 @@ class selector {
 	 * Compile the property to a string
 	 *
 	 * @param array $options An array of compilation options
-	 * @return void
+	 * @return string The compiled CSS selector
 	 */
 	public function compile(array $options) : string {
 		$space = $options['style'] !== 'minify' ? ' ' : '';

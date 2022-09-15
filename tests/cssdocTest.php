@@ -1169,17 +1169,24 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 	protected function compareMinify(array $tests, array $minify = []) {
 		$obj = new cssdoc();
 		foreach ($tests AS $item) {
-			$obj->load($item['input']);
+			$loaded = $obj->load($item['input']);
+			$this->assertTrue($loaded);
 
-			// minify and check against the output
-			$obj->minify($minify);
-			$compiled = $obj->compile();
-			$this->assertEquals($item['output'], $compiled);
+			if ($loaded) {
+				
+				// minify and check against the output
+				$obj->minify($minify);
+				$compiled = $obj->compile();
+				$this->assertEquals($item['output'], $compiled);
 
-			// recycle the output
-			$obj->load($compiled);
-			$obj->minify($minify);
-			$this->assertEquals($item['output'], $obj->compile());
+				// recycle the output
+				$output = '';
+				if ($obj->load($compiled)) {
+					$obj->minify($minify);
+					$output = $obj->compile();
+				}
+				$this->assertEquals($item['output'], $output);
+			}
 		}
 	}
 }

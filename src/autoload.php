@@ -1,5 +1,6 @@
 <?php
-spl_autoload_register(function (string $class) : bool {
+declare(strict_types = 1);
+\spl_autoload_register(function (string $class) : void {
 	$classes = [
 		'hexydec\\css\\cssdoc' => __DIR__.'/cssdoc.php',
 		'hexydec\\css\\document' => __DIR__.'/tokens/document.php',
@@ -10,7 +11,6 @@ spl_autoload_register(function (string $class) : bool {
 		'hexydec\\css\\value' => __DIR__.'/tokens/value.php'
 	];
 	if (isset($classes[$class])) {
-		return (bool) require($classes[$class]);
+		require($classes[$class]);
 	}
-	return false;
 });

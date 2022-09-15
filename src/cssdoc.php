@@ -6,7 +6,7 @@ use \hexydec\tokens\tokenise;
 class cssdoc implements \ArrayAccess, \Iterator {
 
 	/**
-	 * @var array $tokens Regexp components keyed by their corresponding codename for tokenising HTML
+	 * @var array<string> $tokens Regexp components keyed by their corresponding codename for tokenising HTML
 	 */
 	protected static array $tokens = [
 	   'whitespace' => '\s++',
@@ -30,7 +30,7 @@ class cssdoc implements \ArrayAccess, \Iterator {
 	];
 
 	/**
-	 * @var array $config Object configuration array
+	 * @var array<array> $config Object configuration array
 	 */
 	protected array $config = [
 		'nested' => ['@media', '@supports', '@keyframes', '@-webkit-keyframes', '@-moz-keyframes', '@-o-keyframes', '@document', '@-moz-document', '@container'], // directive that can have nested rules
@@ -82,7 +82,6 @@ class cssdoc implements \ArrayAccess, \Iterator {
 			'deeppink' => '#ff1493',
 			'mediumvioletred' => '#c71585',
 			'palevioletred' => '#db7093',
-			'lightsalmon' => '#ffa07a',
 			'orangered' => '#ff4500',
 			'darkorange' => '#ff8c00',
 			'lightyellow' => '#ffffe0',
@@ -142,7 +141,6 @@ class cssdoc implements \ArrayAccess, \Iterator {
 			'deepskyblue' => '#00bfff',
 			'dodgerblue' => '#1e90ff',
 			'cornflowerblue' => '#6495ed',
-			'mediumslateblue' => '#7b68ee',
 			'royalblue' => '#4169e1',
 			'mediumblue' => '#0000cd',
 			'darkblue' => '#00008b',
@@ -201,9 +199,9 @@ class cssdoc implements \ArrayAccess, \Iterator {
 	];
 
 	/**
-	 * @var document $document The root document
+	 * @var ?document $document The root document
 	 */
-	protected document $document;
+	public ?document $document = null;
 
 	/**
 	 * @var int $pointer The current pointer position for the array iterator
@@ -230,7 +228,7 @@ class cssdoc implements \ArrayAccess, \Iterator {
 	#[\ReturnTypeWillChange]
 	public function __get(string $var) {
 		if ($var === 'length') {
-			return \count($this->children);
+			return \count($this->document->rules ?? []);
 		} elseif ($var === 'config') {
 			return $this->config;
 		}
@@ -243,13 +241,13 @@ class cssdoc implements \ArrayAccess, \Iterator {
 	 * @return array An array of child nodes
 	 */
 	public function toArray() : array {
-		return $this->document->rules;
+		return $this->document->rules ?? [];
 	}
 
 	/**
 	 * Array access method allows you to set the object's configuration as properties
 	 *
-	 * @param string|integer $i The key to be updated, can be a string or integer
+	 * @param mixed $i The key to be updated, can be a string or integer
 	 * @param mixed $value The value of the array key in the children array to be updated
 	 */
 	public function offsetSet($i, $value) : void {
@@ -303,9 +301,9 @@ class cssdoc implements \ArrayAccess, \Iterator {
 	/**
 	 * Retrieve the the current pointer position for the object
 	 *
-	 * @return scalar The current pointer position
+	 * @return mixed The current pointer position
 	 */
-	public function key() : int {
+	public function key() : mixed {
 		return $this->pointer;
 	}
 
@@ -397,7 +395,7 @@ class cssdoc implements \ArrayAccess, \Iterator {
 		}
 
 		// reset the document
-		$this->children = [];
+		$this->document = null;
 		if (($obj = $this->parse($css)) === false) {
 			$error = 'Input is not invalid';
 
@@ -412,8 +410,8 @@ class cssdoc implements \ArrayAccess, \Iterator {
 	/**
 	 * Reads the charset defined in the Content-Type meta tag, or detects the charset from the HTML content
 	 *
-	 * @param string $html A string containing valid HTML
-	 * @return string The defined or detected charset or null if the charset is not defined
+	 * @param string $css A string containing valid CSS
+	 * @return ?string The defined or detected charset or null if the charset is not defined
 	 */
 	protected function getCharsetFromCss(string $css) : ?string {
 		if (\mb_strpos($css, '@charset') === 0 && ($end = \mb_strpos($css, '";')) !== false) {

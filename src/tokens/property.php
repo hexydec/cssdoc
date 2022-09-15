@@ -48,7 +48,7 @@ class property {
 	 * Retrieves read only properties
 	 *
 	 * @param string $var The name of the property to retrieve
-	 * @return string The value of the requested property, or null if the porperty doesn't exist
+	 * @return ?string The value of the requested property, or null if the porperty doesn't exist
 	 */
 	public function __get(string $var) {
 		if ($var === 'name') {
@@ -126,7 +126,7 @@ class property {
 	 * Compile the property to a string
 	 *
 	 * @param array $options An array of compilation options
-	 * @return void
+	 * @return string The compiled CSS property
 	 */
 	public function compile(array $options) : string {
 		$b = $options['style'] !== 'minify';

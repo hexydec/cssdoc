@@ -43,7 +43,6 @@ class directive {
 	 * Parses CSS tokens
 	 *
 	 * @param tokenise &$tokens A tokenise object
-	 * @param array $config An array of configuration options
 	 * @return bool Whether anything was parsed
 	 */
 	public function parse(tokenise $tokens) : bool {
@@ -141,7 +140,7 @@ class directive {
 	 * Compile the property to a string
 	 *
 	 * @param array $options An array of compilation options
-	 * @return void
+	 * @return string The compiled CSS
 	 */
 	public function compile(array $options) : string {
 		$b = $options['style'] !== 'minify';

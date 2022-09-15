@@ -22,14 +22,13 @@ class document {
 	 */
 	public function __construct(cssdoc $root, array $rules = []) {
 		$this->root = $root;
-		$this->rules = [];
+		$this->rules = $rules;
 	}
 
 	/**
 	 * Parses CSS tokens
 	 *
 	 * @param tokenise &$tokens A tokenise object
-	 * @param array $config An array of configuration options
 	 * @return bool Whether anything was parsed
 	 */
 	public function parse(tokenise $tokens) : bool {
@@ -98,7 +97,7 @@ class document {
 	/**
 	 * Find rules in the document that match the specified criteria
 	 *
-	 * @param string $selector A string specifying the selectors to match, comma separate multiple selectors
+	 * @param ?array $selectors A string specifying the selectors to match, comma separate multiple selectors
 	 * @param array|string $hasProp A string or array specifying the properties that any rules must contain
 	 * @param array $media An array specifying how any media queries should be match, where the key is the property and the key the value. 'max-width' will match any rules where the value is lower that that specified, 'min-width' the value must be higher. Use 'media' to specify the media type
 	 * @param bool $exact Denotes whether to match selectors exactly, if false, selectors will be matched from the left
