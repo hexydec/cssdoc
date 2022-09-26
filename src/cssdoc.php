@@ -303,6 +303,7 @@ class cssdoc implements \ArrayAccess, \Iterator {
 	 *
 	 * @return mixed The current pointer position
 	 */
+	#[\ReturnTypeWillChange]
 	public function key() : mixed {
 		return $this->pointer;
 	}
