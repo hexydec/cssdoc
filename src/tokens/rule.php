@@ -28,7 +28,7 @@ class rule {
 	/**
 	 * Constructs the comment object
 	 *
-	 * @param cssdoc $root The parent htmldoc object
+	 * @param cssdoc $root The parent cssdoc object
 	 */
 	public function __construct(cssdoc $root) {
 		$this->root = $root;
@@ -102,7 +102,7 @@ class rule {
 		}
 	}
 
-	public function isEmpty() {
+	public function isEmpty() : bool {
 		return !$this->properties;
 	}
 

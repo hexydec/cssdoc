@@ -6,7 +6,7 @@ use \hexydec\tokens\tokenise;
 class cssdoc implements \ArrayAccess, \Iterator {
 
 	/**
-	 * @var array<string> $tokens Regexp components keyed by their corresponding codename for tokenising HTML
+	 * @var array<string> $tokens Regexp components keyed by their corresponding codename for tokenising CSS
 	 */
 	protected static array $tokens = [
 	   'whitespace' => '\s++',
@@ -225,8 +225,7 @@ class cssdoc implements \ArrayAccess, \Iterator {
 	 * @param string $var The name of the property to retrieve, currently 'length' and output
 	 * @return mixed The number of children in the object for length, the output config, or null if the parameter doesn't exist
 	 */
-	#[\ReturnTypeWillChange]
-	public function __get(string $var) {
+	public function __get(string $var) : mixed {
 		if ($var === 'length') {
 			return \count($this->document->rules ?? []);
 		} elseif ($var === 'config') {
@@ -250,7 +249,7 @@ class cssdoc implements \ArrayAccess, \Iterator {
 	 * @param mixed $i The key to be updated, can be a string or integer
 	 * @param mixed $value The value of the array key in the children array to be updated
 	 */
-	public function offsetSet($i, $value) : void {
+	public function offsetSet(mixed $i, mixed $value) : void {
 		if (\is_null($i)) {
 			$this->document->rules[] = $value;
 		} else {
@@ -261,30 +260,29 @@ class cssdoc implements \ArrayAccess, \Iterator {
 	/**
 	 * Array access method allows you to check that a key exists in the configuration array
 	 *
-	 * @param string|integer $i The key to be checked, can be a string or integer
+	 * @param mixed $i The key to be checked
 	 * @return bool Whether the key exists in the config array
 	 */
-	public function offsetExists($i) : bool {
+	public function offsetExists(mixed $i) : bool {
 		return isset($this->document->rules[$i]);
 	}
 
 	/**
 	 * Removes a key from the configuration array
 	 *
-	 * @param string|integer $i The key to be removed, can be a string or integer
+	 * @param mixed $i The key to be removed
 	 */
-	public function offsetUnset($i) : void {
+	public function offsetUnset(mixed $i) : void {
 		unset($this->document->rules[$i]);
 	}
 
 	/**
 	 * Retrieves a value from the configuration array with the specified key
 	 *
-	 * @param string|integer $i The key to be accessed, can be a string or integer
+	 * @param mixed $i The key to be accessed, can be a string or integer
 	 * @return mixed The requested value or null if the key doesn't exist
 	 */
-	#[\ReturnTypeWillChange]
-	public function offsetGet($i) { // return reference so you can set it like an array
+	public function offsetGet(mixed $i) : mixed { // return reference so you can set it like an array
 		return $this->document->rules[$i] ?? null;
 	}
 
@@ -293,8 +291,7 @@ class cssdoc implements \ArrayAccess, \Iterator {
 	 *
 	 * @return document|rule The child node at the current pointer position
 	 */
-	#[\ReturnTypeWillChange]
-	public function current() {
+	public function current() : mixed {
 		return $this->document->rules[$this->pointer] ?? null;
 	}
 
@@ -303,7 +300,6 @@ class cssdoc implements \ArrayAccess, \Iterator {
 	 *
 	 * @return mixed The current pointer position
 	 */
-	#[\ReturnTypeWillChange]
 	public function key() : mixed {
 		return $this->pointer;
 	}
@@ -336,14 +332,14 @@ class cssdoc implements \ArrayAccess, \Iterator {
 	}
 
 	/**
-	 * Open an HTML file from a URL
+	 * Open a CSS file from a URL
 	 *
-	 * @param string $url The address of the HTML file to retrieve
+	 * @param string $url The address of the CSS file to retrieve
 	 * @param resource $context A resource object made with stream_context_create()
 	 * @param ?string &$error A reference to any user error that is generated
-	 * @return mixed The loaded HTML, or false on error
+	 * @return string|false The loaded CSS, or false on error
 	 */
-	public function open(string $url, mixed $context = null, ?string &$error = null) {
+	public function open(string $url, $context = null, ?string &$error = null) : string|false {
 
 		// check resource
 		if ($context !== null && !\is_resource($context)) {
@@ -354,7 +350,7 @@ class cssdoc implements \ArrayAccess, \Iterator {
 			$error = 'Could not open file "'.$url.'"';
 
 		// retrieve the stream contents
-		} elseif (($html = \stream_get_contents($handle)) === false) {
+		} elseif (($css = \stream_get_contents($handle)) === false) {
 			$error = 'Could not read file "'.$url.'"';
 
 		// success
@@ -372,21 +368,21 @@ class cssdoc implements \ArrayAccess, \Iterator {
 				}
 			}
 
-			// load html
-			if ($this->load($html, $charset, $error)) {
-				return $html;
+			// load CSS
+			if ($this->load($css, $charset, $error)) {
+				return $css;
 			}
 		}
 		return false;
 	}
 
 	/**
-	 * Parse an HTML string into the object
+	 * Parse a CSS string into the object
 	 *
 	 * @param string $css A string containing valid CSS
 	 * @param string $charset The charset of the document
 	 * @param ?string &$error A reference to any user error that is generated
-	 * @return bool Whether the input HTML was parsed
+	 * @return bool Whether the input CSS was parsed
 	 */
 	public function load(string $css, string $charset = null, ?string &$error = null) : bool {
 
@@ -409,7 +405,7 @@ class cssdoc implements \ArrayAccess, \Iterator {
 	}
 
 	/**
-	 * Reads the charset defined in the Content-Type meta tag, or detects the charset from the HTML content
+	 * Reads the charset defined in the Content-Type meta tag, or detects the charset from the CSS content
 	 *
 	 * @param string $css A string containing valid CSS
 	 * @return ?string The defined or detected charset or null if the charset is not defined
@@ -427,9 +423,9 @@ class cssdoc implements \ArrayAccess, \Iterator {
 	 * Parses an array of tokens into an CSS document
 	 *
 	 * @param string $css A string containing valid CSS
-	 * @return document|bool A document object or false if the string could not be parsed
+	 * @return document|false A document object or false if the string could not be parsed
 	 */
-	protected function parse(string $css) {
+	protected function parse(string $css) : document|false {
 
 		// tokenise the input CSS
 		$tokens = new tokenise(self::$tokens, $css);
@@ -475,7 +471,7 @@ class cssdoc implements \ArrayAccess, \Iterator {
 	 * @param array $options An array indicating output options, this is merged with cssdoc::$output
 	 * @return string|false The compiled CSS, or false if the file could not be saved
 	 */
-	public function save(string $file = null, array $options = []) {
+	public function save(string $file = null, array $options = []) : string|false {
 		$css = $this->compile($options);
 
 		// save file
@@ -488,35 +484,35 @@ class cssdoc implements \ArrayAccess, \Iterator {
 		return $css;
 	}
 
-	public function collection(array $rules) {
-		$this->document = new document($this, $rules);
-	}
+	// public function collection(array $rules) {
+	// 	$this->document = new document($this, $rules);
+	// }
 
-	/**
-	 * Find rules in the document that match the specified criteria
-	 *
-	 * @param string $selector A string specifying the selectors to match, comma separate multiple selectors
-	 * @param array|string $hasProp A string or array specifying the properties that any rules must contain
-	 * @param array $media An array specifying how any media queries should be match, where the key is the property and the key the value. 'max-width' will match any rules where the value is lower that that specified, 'min-width' the value must be higher. Use 'media' to specify the media type
-	 * @param bool $exact Denotes whether to match selectors exactly, if false, selectors will be matched from the left
-	 * @return cssdoc A CSSdoc object
-	 */
-	public function find(?string $selector, $hasProp = null, array $media = [], bool $exact = true) : cssdoc {
+	// /**
+	//  * Find rules in the document that match the specified criteria
+	//  *
+	//  * @param string $selector A string specifying the selectors to match, comma separate multiple selectors
+	//  * @param array|string $hasProp A string or array specifying the properties that any rules must contain
+	//  * @param array $media An array specifying how any media queries should be match, where the key is the property and the key the value. 'max-width' will match any rules where the value is lower that that specified, 'min-width' the value must be higher. Use 'media' to specify the media type
+	//  * @param bool $exact Denotes whether to match selectors exactly, if false, selectors will be matched from the left
+	//  * @return cssdoc A CSSdoc object
+	//  */
+	// public function find(?string $selector, $hasProp = null, array $media = [], bool $exact = true) : cssdoc {
 
-		// normalise selectors
-		$selector = $selector === null ? null : \array_map('\\trim', \explode(',', $selector));
-		if (!\is_array($hasProp)) {
-			$hasProp = [$hasProp];
-		}
+	// 	// normalise selectors
+	// 	$selector = $selector === null ? null : \array_map('\\trim', \explode(',', $selector));
+	// 	if (!\is_array($hasProp)) {
+	// 		$hasProp = [$hasProp];
+	// 	}
 
-		// find rules
-		$rules = $this->document->find($selector, $hasProp, $media);
+	// 	// find rules
+	// 	$rules = $this->document->find($selector, $hasProp, $media);
 
-		// attach to a new document
-		$obj = new cssdoc($this->config);
-		$obj->collection($rules);
-		return $obj;
-	}
+	// 	// attach to a new document
+	// 	$obj = new cssdoc($this->config);
+	// 	$obj->collection($rules);
+	// 	return $obj;
+	// }
 
 	// public function prop(string $prop, ?string $func = null) {
 	//

@@ -18,7 +18,7 @@ class selector {
 	/**
 	 * Constructs the comment object
 	 *
-	 * @param cssdoc $root The parent htmldoc object
+	 * @param cssdoc $root The parent cssdoc object
 	 */
 	public function __construct(cssdoc $root) {
 		$this->root = $root;

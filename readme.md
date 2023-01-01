@@ -52,7 +52,7 @@ CSSdoc requires [\hexydec\token\tokenise](https://github.com/hexydec/tokenise) t
 
 ## Support
 
-CSSdoc supports PHP version 7.4+.
+CSSdoc supports PHP version 8.0+.
 
 ## Contributing
 
