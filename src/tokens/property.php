@@ -48,9 +48,9 @@ class property {
 	 * Retrieves read only properties
 	 *
 	 * @param string $var The name of the property to retrieve
-	 * @return ?string The value of the requested property, or null if the porperty doesn't exist
+	 * @return mixed The value of the requested property, or null if the property doesn't exist
 	 */
-	public function __get(string $var) {
+	public function __get(string $var) : mixed {
 		if ($var === 'name') {
 			return $this->name;
 		}

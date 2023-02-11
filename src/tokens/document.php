@@ -18,7 +18,7 @@ class document {
 	/**
 	 * Constructs the comment object
 	 *
-	 * @param cssdoc $root The parent htmldoc object
+	 * @param cssdoc $root The parent cssdoc object
 	 */
 	public function __construct(cssdoc $root, array $rules = []) {
 		$this->root = $root;
@@ -101,15 +101,15 @@ class document {
 	 * @param array|string $hasProp A string or array specifying the properties that any rules must contain
 	 * @param array $media An array specifying how any media queries should be match, where the key is the property and the key the value. 'max-width' will match any rules where the value is lower that that specified, 'min-width' the value must be higher. Use 'media' to specify the media type
 	 * @param bool $exact Denotes whether to match selectors exactly, if false, selectors will be matched from the left
-	 * @return array A CSSdoc object
+	 * @return array An array of rule objects
 	 */
-	public function find(?array $selectors, $hasProp = null, array $media = [], bool $exact = true) {
-		$rules = [];
-		foreach ($this->rules AS $item) {
-			if (\get_class($item) === '\\hexydec\\css\\cssdoc' && $item->matches($selectors, $hasProp, $exact)) {
-				$rules[] = $item;
-			}
-		}
-		return $rules;
-	}
+	// public function find(?array $selectors, array|string $hasProp = null, array $media = [], bool $exact = true) {
+	// 	$rules = [];
+	// 	foreach ($this->rules AS $item) {
+	// 		if (\get_class($item) === '\\hexydec\\css\\cssdoc' && $item->matches($selectors, $hasProp, $exact)) {
+	// 			$rules[] = $item;
+	// 		}
+	// 	}
+	// 	return $rules;
+	// }
 }
