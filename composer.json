@@ -14,7 +14,7 @@
 	"keywords": ["css", "stylesheet", "minifier", "minify", "parser", "compiler"],
     "minimum-stability": "stable",
     "require": {
-        "php": ">=7.4",
+        "php": ">=8.0",
 		"hexydec/tokenise": "1.0.1"
 	},
 	"autoload": {
