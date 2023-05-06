@@ -961,6 +961,14 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 				'output' => '#id{margin:0 calc(2em + 20px);padding:calc(2em + 20px) 0;border-width:calc(2em + 20px);}'
 			],
 			[
+				'input' => "#id {
+					margin: 0 min(2em + 20px, 2rem * 2) 0 max(2em + 20px, 2rem * 2, 20px / 2, 20px * 2);
+					padding: clamp(5px, 50% + 5px, 20px) 0 clamp(5px, 50% + 5px, 20px) 0;
+					border-width: max(2em, 20px) max(2em, 20px) max(2em, 20px) max(2em, 20px);
+				}",
+				'output' => '#id{margin:0 min(2em + 20px,2rem*2) 0 max(2em + 20px,2rem*2,20px/2,20px*2);padding:clamp(5px,50% + 5px,20px) 0;border-width:max(2em,20px);}'
+			],
+			[
 				'input' => '.ui.loading.segment:after {
 						border-color: #767676 rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1);
 					}',
@@ -1184,7 +1192,7 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 				// minify and check against the output
 				$obj->minify($minify);
 				$compiled = $obj->compile();
-				$this->assertEquals($item['output'], $compiled);
+				$this->assertEquals($compiled, $item['output']);
 
 				// recycle the output
 				$output = '';
@@ -1192,7 +1200,7 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 					$obj->minify($minify);
 					$output = $obj->compile();
 				}
-				$this->assertEquals($item['output'], $output);
+				$this->assertEquals($output, $item['output']);
 			}
 		}
 	}

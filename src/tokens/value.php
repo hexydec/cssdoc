@@ -247,10 +247,10 @@ class value {
 	 * @return string The compiled CSS value
 	 */
 	public function compile(array $options) : string {
-		$b = $options['style'] !== 'minify';
 		$css = $options['prefix'];
 		$join = '';
 		$last = null;
+		$spaced = $this->root->config['spaced'];
 		foreach ($this->properties AS $item) {
 			if (\is_object($item)) {
 				if (\in_array($last, ['and', '+', '-'], true)) {
@@ -258,7 +258,7 @@ class value {
 				}
 				$css .= '('.$item->compile($options).')';
 				$join = ' ';
-			} elseif (\in_array($item, ['-', '+'], true) && !\in_array(\mb_strtolower($this->name), $this->root->config['spaced'], true)) {
+			} elseif (\in_array($item, ['-', '+'], true) && !\in_array(\mb_strtolower($this->name), $spaced, true)) {
 				$css .= $item;
 				$join = '';
 			} elseif (\in_array($item, [':', ',', '*', '/'], true)) {
