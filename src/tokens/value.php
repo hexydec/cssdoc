@@ -122,7 +122,7 @@ class value {
 				} elseif ($minify['colors'] && \mb_strpos($item, '#') === 0) {
 
 					// shorten hex values
-					if (\preg_match('/^#(([a-f0-9])\\2)(([a-f0-9])\\4)(([a-f0-9])\\6)/i', $item, $match)) {
+					if (\preg_match('/^#(([a-f0-9])\\2)(([a-f0-9])\\4)(([a-f0-9])\\6)$/i', $item, $match)) {
 						$item = '#'.$match[2].$match[4].$match[6];
 					}
 

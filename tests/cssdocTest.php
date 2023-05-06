@@ -699,6 +699,13 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 					background: #ffd700;
 				}",
 				'output' => '#id{color:red;background:gold;}'
+			],
+			[
+				'input' => "#id {
+					color: #FF000033;
+					background: #ffd70033;
+				}",
+				'output' => '#id{color:#FF000033;background:#ffd70033;}'
 			]
 		];
 		$config = $this->config;
