@@ -36,7 +36,7 @@ class selector {
 			do {
 				switch ($token['type']) {
 					case 'whitespace':
-						if (!$join && $this->selectors) {
+						if (!$join && !empty($this->selectors)) {
 							$join = ' ';
 						}
 						break;
@@ -44,7 +44,7 @@ class selector {
 						if ($token['value'] !== '*') {
 							$join = $token['value'];
 							break;
-						}
+						} // fall-through if not *
 					case 'string':
 						$this->selectors[] = [
 							'selector' => $token['value'],
@@ -54,7 +54,6 @@ class selector {
 						break;
 					case 'colon':
 						$parts = ':';
-						$brackets = false;
 						while (($token = $tokens->next()) !== null) {
 
 							// build up the selector

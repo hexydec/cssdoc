@@ -78,7 +78,7 @@ class property {
 								break;
 							case 'string':
 							case 'colon':
-								$this->name = $prop;
+								$this->name = $prop; // set name if colon
 							case 'comma':
 								$item = new value($this->root, $this->name);
 								if ($item->parse($tokens)) {

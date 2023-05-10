@@ -214,7 +214,7 @@ class cssdoc implements \ArrayAccess, \Iterator {
 	 * @param array $config An array of configuration parameters that is recursively merged with the default config
 	 */
 	public function __construct(array $config = []) {
-		if ($config) {
+		if (!empty($config)) {
 			$this->config = \array_replace_recursive($this->config, $config);
 		}
 	}
@@ -388,7 +388,7 @@ class cssdoc implements \ArrayAccess, \Iterator {
 
 		// detect the charset
 		if ($charset || ($charset = $this->getCharsetFromCss($css)) !== null) {
-			$css = \mb_convert_encoding($css, \mb_internal_encoding(), $charset);
+			$css = \mb_convert_encoding($css, (string) \mb_internal_encoding(), $charset);
 		}
 
 		// reset the document
@@ -449,8 +449,10 @@ class cssdoc implements \ArrayAccess, \Iterator {
 	 * @return void
 	 */
 	public function minify(array $minify = []) : void {
-		$minify = \array_merge($this->config['minify'], $minify);
-		$this->document->minify($minify);
+		if ($this->document != null) {
+			$minify = \array_merge($this->config['minify'], $minify);
+			$this->document->minify($minify);
+		}
 	}
 
 	/**

@@ -23,7 +23,7 @@ class value {
 	/**
 	 * @var array Properties
 	 */
-	protected $properties = [];
+	protected array $properties = [];
 
 	/**
 	 * Constructs the property object
@@ -68,22 +68,25 @@ class value {
 					$this->properties[] = $token['value'];
 					break;
 				case 'bracketopen':
-					$item = new value($this->root, !$this->brackets && $this->properties ? end($this->properties) : $this->name, true);
+					$name = !$this->brackets && !empty($this->properties) ? \end($this->properties) : $this->name;
+					$item = new value($this->root, $name, true);
 					if ($item->parse($tokens)) {
 						$this->properties[] = $item;
 					}
 					break;
 				case 'comment':
-					$comment = $token['value'];
+					// $comment = $token['value'];
 					break;
 				case 'semicolon':
 					if ($this->brackets) { // allow semi-colon as a value within brackets for data URI's
 						$this->properties[] = $token['value'];
 					}
+					// rewind pointer below
 				case 'curlyopen':
 				case 'curlyclose':
 				case 'important':
 					$tokens->prev();
+					break 2;
 				case 'bracketclose':
 					break 2;
 			}
@@ -258,7 +261,7 @@ class value {
 				}
 				$css .= '('.$item->compile($options).')';
 				$join = ' ';
-			} elseif (\in_array($item, ['-', '+'], true) && !\in_array(\mb_strtolower($this->name), $spaced, true)) {
+			} elseif (\in_array($item, ['-', '+'], true) && !\in_array(\mb_strtolower($this->name ?? ''), $spaced, true)) {
 				$css .= $item;
 				$join = '';
 			} elseif (\in_array($item, [':', ',', '*', '/'], true)) {

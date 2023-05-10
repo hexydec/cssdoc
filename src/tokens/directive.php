@@ -47,7 +47,6 @@ class directive {
 	 */
 	public function parse(tokenise $tokens) : bool {
 		if (($token = $tokens->current()) !== null) {
-			$directive = true;
 			$properties = false;
 			$root = $this->root;
 			do {
@@ -106,16 +105,16 @@ class directive {
 
 		// minify properties
 		$props = $this->properties;
-		foreach ($props AS $key => $item) {
+		foreach ($props AS $item) {
 			$item->minify($minify);
 		}
 
-		if ($minify['semicolons'] && $props) {
+		if ($minify['semicolons'] && !empty($props)) {
 			\end($props)->semicolon = false;
 		}
 
 		// minify document
-		if ($this->document) {
+		if ($this->document !== null) {
 			$this->document->minify($minify);
 			if ($minify['empty'] && !$this->document->rules) {
 				$this->document = null;
@@ -152,12 +151,12 @@ class directive {
 			$css .= $join.$item->compile($options);
 			$join = $b ? ', ' : ',';
 		}
-		if (!$this->properties && !$this->document) {
+		if (empty($this->properties) && $this->document === null) {
 			$css .= ';';
 		}
 
 		// compile properties
-		if ($this->properties) {
+		if (!empty($this->properties)) {
 			$css .= $b ? ' {' : '{';
 
 			// compile properties
@@ -169,7 +168,7 @@ class directive {
 		}
 
 		// compile document
-		if ($this->document) {
+		if ($this->document !== null) {
 			$css .= $b ? ' {' : '{';
 			$tab = $b ? "\n\t".$options['prefix'] : '';
 			$css .= $tab.$this->document->compile($options);

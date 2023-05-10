@@ -51,7 +51,7 @@ class rule {
 						$selector = false;
 						break;
 					case 'directive':
-						$tokens->prev();
+						$tokens->prev(); // rewind the token and return
 					case 'curlyclose':
 						break 2;
 					case 'whitespace':
@@ -75,7 +75,7 @@ class rule {
 				}
 			} while (($token = $tokens->next()) !== null);
 		}
-		return $this->selectors && $this->properties;
+		return !empty($this->selectors) && !empty($this->properties);
 	}
 
 	/**
@@ -97,13 +97,13 @@ class rule {
 		}
 
 		// remove last semi-colon
-		if ($this->properties && $minify['semicolons']) {
+		if (!empty($this->properties) && $minify['semicolons']) {
 			\end($this->properties)->semicolon = false;
 		}
 	}
 
 	public function isEmpty() : bool {
-		return !$this->properties;
+		return empty($this->properties);
 	}
 
 	/**
@@ -155,7 +155,7 @@ class rule {
 		}
 
 		// check props
-		if ($matches && $hasProp) {
+		if ($matches && !empty($hasProp)) {
 			foreach ($this->properties AS $item) {
 				if (!\in_array($item->name, $hasProp)) {
 					$matches = false;
