@@ -449,7 +449,7 @@ class cssdoc implements \ArrayAccess, \Iterator {
 	 * @return void
 	 */
 	public function minify(array $minify = []) : void {
-		if ($this->document != null) {
+		if ($this->document !== null) {
 			$minify = \array_merge($this->config['minify'], $minify);
 			$this->document->minify($minify);
 		}
@@ -461,9 +461,12 @@ class cssdoc implements \ArrayAccess, \Iterator {
 	 * @param array $options An array indicating output options, this is merged with cssdoc::$output
 	 * @return string The document as a string
 	 */
-	public function compile(array $options = []) : string {
-		$options = \array_merge($this->config['output'], $options);
-		return $this->document->compile($options);
+	public function compile(array $options = []) : ?string {
+		if ($this->document !== null) {
+			$options = \array_merge($this->config['output'], $options);
+			return $this->document->compile($options);
+		}
+		return null;
 	}
 
 	/**
