@@ -3,6 +3,7 @@ declare(strict_types = 1);
 \spl_autoload_register(function (string $class) : void {
 	$classes = [
 		'hexydec\\css\\cssdoc' => __DIR__.'/cssdoc.php',
+		'hexydec\\css\\config' => __DIR__.'/config.php',
 		'hexydec\\css\\document' => __DIR__.'/tokens/document.php',
 		'hexydec\\css\\directive' => __DIR__.'/tokens/directive.php',
 		'hexydec\\css\\rule' => __DIR__.'/tokens/rule.php',
