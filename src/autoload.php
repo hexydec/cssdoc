@@ -12,6 +12,6 @@ declare(strict_types = 1);
 		'hexydec\\css\\value' => __DIR__.'/tokens/value.php'
 	];
 	if (isset($classes[$class])) {
-		require($classes[$class]);
+		require $classes[$class];
 	}
 });
