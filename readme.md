@@ -31,7 +31,7 @@ if ($doc->load($css) {
 }
 ```
 
-You can test out the minifier online at [https://hexydec.com/cssdoc/](https://hexydec.com/cssdoc/), or run the supplied index.php file after installation.
+You can test out the minifier online at [https://hexydec.com/apps/minify-css/](https://hexydec.com/apps/minify-css/), or run the supplied index.php file after installation.
 
 ## Installation
 
