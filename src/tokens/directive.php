@@ -31,6 +31,11 @@ class directive {
 	public ?document $document = null;
 
 	/**
+	 * @var bool Whether the object has an empty body
+	 */
+	public bool $empty = false;
+
+	/**
 	 * Constructs the comment object
 	 *
 	 * @param cssdoc $root The parent cssdoc object
@@ -76,6 +81,8 @@ class directive {
 							$item = new document($root);
 							if ($item->parse($tokens)) {
 								$this->document = $item;
+							} else {
+								$this->empty = true;
 							}
 						} else {
 							$properties = true;
@@ -129,9 +136,9 @@ class directive {
 	 */
 	public function isEmpty() : bool {
 		if (\in_array($this->directive, $this->root->config['nested'], true)) {
-			return $this->document === null;
+			return $this->document === null && $this->empty;
 		} else {
-			return !$this->properties && !$this->content;
+			return empty($this->properties) && empty($this->content);
 		}
 	}
 

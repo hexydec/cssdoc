@@ -342,6 +342,27 @@ final class cssdocTest extends \PHPUnit\Framework\TestCase {
 								margin: 1cm;
 							}',
 				'output' => '@page :first{margin:1cm;}'
+			],
+			[
+				'input' => '@layer module, state;
+
+					@layer state {
+						.alert {
+							background-color: brown;
+						}
+						p {
+							border: medium solid limegreen;
+						}
+					}
+					
+					@layer module {
+						.alert {
+							border: medium solid violet;
+							background-color: yellow;
+							color: white;
+						}
+					}',
+				'output' => '@layer module,state;@layer state{.alert{background-color:brown;}p{border:medium solid limegreen;}}@layer module{.alert{border:medium solid violet;background-color:yellow;color:white;}}'
 			]
 		];
 		$this->compareMinify($tests, $this->config);
