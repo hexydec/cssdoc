@@ -215,7 +215,7 @@ class cssdoc extends config implements \ArrayAccess, \Iterator {
 	 * @param ?string &$error A reference to any user error that is generated
 	 * @return bool Whether the input CSS was parsed
 	 */
-	public function load(string $css, string $charset = null, ?string &$error = null) : bool {
+	public function load(string $css, ?string $charset = null, ?string &$error = null) : bool {
 
 		// detect the charset
 		if ($charset || ($charset = $this->getCharsetFromCss($css)) !== null) {
@@ -307,7 +307,7 @@ class cssdoc extends config implements \ArrayAccess, \Iterator {
 	 * @param array $options An array indicating output options, this is merged with cssdoc::$output
 	 * @return string|false The compiled CSS, or false if the file could not be saved
 	 */
-	public function save(string $file = null, array $options = []) : string|false {
+	public function save(?string $file = null, array $options = []) : string|false {
 		$css = $this->compile($options);
 
 		// save file
