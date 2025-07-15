@@ -11,6 +11,8 @@ class cssdoc extends config implements \ArrayAccess, \Iterator {
 	protected static array $tokens = [
 	   'whitespace' => '\s++',
 	   'comment' => '\\/\\*[\d\D]*?\\*\\/',
+	   'cdataopen' => '<\!\[CDATA\[',
+	   'cdataclose' => '\]\]>',
 	   'quotes' => '(?<!\\\\)(?:"(?:[^"\\\\]++|\\\\.)*+"|\'(?:[^\'\\\\]++|\\\\.)*+\')',
 	   'comparison' => '[\\^*$<>]?=', // comparison operators for media queries or attribute selectors
 	   'join' => '[>+~*\\/]|-(?!-)',
