@@ -16,11 +16,6 @@ class document {
 	public array $rules = [];
 
 	/**
-	 * @var bool Whether to wrap in CDATA tags
-	 */
-	public bool $cdata = false;
-
-	/**
 	 * Constructs the comment object
 	 *
 	 * @param cssdoc $root The parent cssdoc object
@@ -41,9 +36,6 @@ class document {
 		// parse tokens
 		while (($token = $tokens->next()) !== null) {
 			switch ($token['type']) {
-				case 'cdataopen':
-					$this->cdata = true;
-					break;
 				case 'directive':
 					$item = new directive($this->root);
 					$item->parse($tokens);
@@ -54,6 +46,7 @@ class document {
 					break 2;
 				case 'comment':
 				case 'whitespace':
+				case 'cdataopen':
 				case 'cdataclose':
 					break;
 				default:
@@ -92,7 +85,7 @@ class document {
 	 */
 	public function compile(array $options) : string {
 		$b = $options['style'] !== 'minify';
-		$css = $this->cdata ? '<![CDATA[' : '';
+		$css = '';
 
 		// compile selectors
 		$join = '';
@@ -100,7 +93,7 @@ class document {
 			$css .= $join.$item->compile($options);
 			$join = $b ? "\n\n" : '';
 		}
-		return $css.($this->cdata ? ']]>' : '');
+		return $css;
 	}
 
 	/**
