@@ -3,6 +3,10 @@ declare(strict_types = 1);
 namespace hexydec\css;
 use \hexydec\tokens\tokenise;
 
+/**
+ * @property-read array<mixed> $config The object configuration array
+ * @property-read int $length The number of children in the document
+ */
 class cssdoc extends config implements \ArrayAccess, \Iterator {
 
 	/**
